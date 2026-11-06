@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- Um Thymeleaf in html nutzen zu können, muss der Namespace geladen werden.
+     Dann sind alle th-Befehle verwendbar.  -->
+<html lang="de" xmlns:th="http://www.thymeleaf.org">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produkt anlegen</title>
+</head>
+<body>
+
+    <h1>Produktübersicht</h1>
+    <a th:href="@{/admin/products/new}">Produkt hinzufügen</a><br>
+    <table border="1">
+        <tr>
+        <th>Produkt-Id</th>
+        <th>Name</th>
+        <th>Marke</th>
+        <th>Preis</th>
+        <th>Aktionen</th>
+        </tr>
+    
+        <!-- Für jedes Produkt in der Tabelle Product soll eine Zeile in der
+             Tabelle ausgegeben werden. -->
+        <tr th:each="product : ${listProductsView}">
+            <td th:text="${product.pid}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.brand}"></td>
+            <td th:text="${product.price}"></td>
+            <td><a th:href="@{'/admin/products/edit/' + ${product.pid}}">Bearbeiten</a>
+            <br>
+            <a th:href="@{'/admin/products/delete/' + ${product.pid}}" 
+                onclick="return confirm('Wollen Sie wirklich diese Produkt löschen?');">Löschen</a></td>
+        </tr>
+    </table>
+
+
+
+
+</body>
+</html>
