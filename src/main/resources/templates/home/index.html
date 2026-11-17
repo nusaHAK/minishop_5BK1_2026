@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!-- Thymeleaf-Namespace laden, damit th-Befehle verwendbar sind. -->
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniShop - Startseite</title>
+    <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Navigationsleiste oben. Vom Server wird der Inhalt durch das Fragment
+         fragments/header.html ersetzt. Der Inhalt innerhalb dieses Elements ist
+         nur der Fallback für die Vorschau, wenn die Datei direkt im Browser
+         geöffnet wird (ohne Server kein th:replace). -->
+    <header class="site-header" th:replace="~{fragments/header :: header('home')}">
+        <div class="container header-inner">
+            <a class="brand" href="/">
+                <span class="brand-mark">M</span>
+                MiniShop
+            </a>
+            <nav class="site-nav" aria-label="Hauptnavigation">
+                <a class="is-active" href="/">Home</a>
+                <a href="/shop">Shop</a>
+                <a href="/cart">Warenkorb</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Begrüßung -->
+        <section class="hero">
+            <div class="container hero-grid">
+
+                <div class="hero-copy">
+                    <p class="eyebrow rise">Willkommen</p>
+                    <h1 class="rise rise-2">
+                        Willkommen im <span class="accent-text">MiniShop</span>!
+                    </h1>
+                    <p class="lead rise rise-3">
+                        Schön, dass Sie bei uns vorbeischauen. Stöbern Sie in unserem
+                        Sortiment und entdecken Sie unsere Produkte.
+                    </p>
+                    <div class="cta-row rise rise-4">
+                        <a class="btn" href="/shop" th:href="@{/shop}">
+                            Zum Shop <span aria-hidden="true">&rarr;</span>
+                        </a>
+                        <p class="cta-note">Alle Produkte auf einen Blick</p>
+                    </div>
+                </div>
+
+                
+                        <div class="product-body">
+                            <p class="product-kicker">MiniShop</p>
+                            <h2 class="product-title">Ihr nächster Einkauf</h2>
+                            <p class="product-text">
+                                Marken, Preise und Produktdetails &ndash; alles übersichtlich
+                                an einem Ort.
+                            </p>
+                            <div class="product-foot">
+                                <span class="price-label">Bereit zum Stöbern?</span>
+                                <a class="mini-btn" href="/shop" th:href="@{/shop}">Shop</a>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="float-badge">Alle Preise transparent</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Vorteile -->
+        <section class="features">
+            <div class="container">
+
+                <div class="section-head">
+                    <p class="eyebrow">Gut zu wissen</p>
+                    <h2>Alles, was Sie brauchen</h2>
+                    <p class="section-lead">
+                        Drei Dinge, die Ihren Besuch bei uns besonders einfach machen.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+
+                    <div class="feature">
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 7h11v9H3z"></path>
+                                <path d="M14 10h4l3 3v3h-7z"></path>
+                                <circle cx="7" cy="18" r="1.7"></circle>
+                                <circle cx="17.5" cy="18" r="1.7"></circle>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Sortiment ansehen</h3>
+                            <p>Alle Produkte mit Name, Marke und Preis auf der Shop-Seite.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 3l7 3v6c0 4.2-2.9 7.5-7 9-4.1-1.5-7-4.8-7-9V6z"></path>
+                                <path d="M9 12l2 2 4-4"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Sicher stöbern</h3>
+                            <p>Produktdetails und Preise sind jederzeit transparent einsehbar.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5 5h2l2.2 9.2a2 2 0 0 0 2 1.6h6.4a2 2 0 0 0 2-1.6L21 8H8"></path>
+                                <circle cx="11" cy="19" r="1.4"></circle>
+                                <circle cx="18" cy="19" r="1.4"></circle>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Warenkorb</h3>
+                            <p>Ihre Auswahl bleibt während des Besuchs in der Session erhalten.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Abschluss-Aufruf -->
+        <section class="cta-band">
+            <div class="container cta-band-inner">
+                <div>
+                    <h2>Bereit zum Stöbern?</h2>
+                    <p>Entdecken Sie das gesamte Sortiment von MiniShop.</p>
+                </div>
+                <a class="btn btn-light" href="/shop" th:href="@{/shop}">
+                    Zum Shop <span aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; 2026 MiniShop</span>
+            <span>Team 1 &middot; Shop-Frontend f&uuml;r Kunden</span>
+        </div>
+    </footer>
+
+</body>
+</html>

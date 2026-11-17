@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- Wiederverwendbare Navigationsleiste (Projektvereinbarung: fragments/header.html).
+     Einbinden in einer Seite:
+         <header th:replace="~{fragments/header :: header('home')}"></header>
+     Der Parameter steuert den aktiven Menüpunkt: 'home' | 'shop' | 'cart'. -->
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Navigation</title>
+</head>
+<body>
+
+    <header class="site-header" th:fragment="header(active)">
+        <div class="container header-inner">
+
+            <a class="brand" href="/" th:href="@{/}">
+                <span class="brand-mark">M</span>
+                MiniShop
+            </a>
+
+            <nav class="site-nav" aria-label="Hauptnavigation">
+                <a href="/" th:href="@{/}"
+                   th:classappend="${active == 'home'} ? 'is-active'">Home</a>
+                <a href="/shop" th:href="@{/shop}"
+                   th:classappend="${active == 'shop'} ? 'is-active'">Shop</a>
+                <a href="/cart" th:href="@{/cart}"
+                   th:classappend="${active == 'cart'} ? 'is-active'">Warenkorb</a>
+            </nav>
+
+        </div>
+    </header>
+
+</body>
+</html>
