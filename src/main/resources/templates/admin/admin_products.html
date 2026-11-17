@@ -1,41 +1,92 @@
 <!DOCTYPE html>
 <!-- Um Thymeleaf in html nutzen zu können, muss der Namespace geladen werden.
      Dann sind alle th-Befehle verwendbar.  -->
-<html lang="de" xmlns:th="http://www.thymeleaf.org">  
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produkt anlegen</title>
+    <title>Produktübersicht</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
 
-    <h1>Produktübersicht</h1>
-    <a th:href="@{/admin/products/new}">Produkt hinzufügen</a><br>
-    <table border="1">
-        <tr>
-        <th>Produkt-Id</th>
-        <th>Name</th>
-        <th>Marke</th>
-        <th>Preis</th>
-        <th>Aktionen</th>
-        </tr>
-    
-        <!-- Für jedes Produkt in der Tabelle Product soll eine Zeile in der
-             Tabelle ausgegeben werden. -->
-        <tr th:each="product : ${listProductsView}">
-            <td th:text="${product.pid}"></td>
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.brand}"></td>
-            <td th:text="${product.price}"></td>
-            <td><a th:href="@{'/admin/products/edit/' + ${product.pid}}">Bearbeiten</a>
-            <br>
-            <a th:href="@{'/admin/products/delete/' + ${product.pid}}" 
-                onclick="return confirm('Wollen Sie wirklich diese Produkt löschen?');">Löschen</a></td>
-        </tr>
-    </table>
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="navbar-inner container">
+            <a class="brand" th:href="@{/admin/products}">
+                <span class="brand-mark">MS</span>
+                MiniShop
+            </a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+                <a class="nav-link is-active" th:href="@{/admin/products}">Produkte</a>
+                <a class="nav-link" th:href="@{/admin/products/new}">Produkt hinzufügen</a>
+            </nav>
+        </div>
+    </header>
 
+    <main class="container page">
 
+        <!-- Seitenkopf -->
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Administration</p>
+                <h1>Produktübersicht</h1>
+                <p class="page-subtitle">Alle Produkte des Shops auf einen Blick.</p>
+            </div>
+            <a class="btn btn-primary" th:href="@{/admin/products/new}">Produkt hinzufügen</a>
+        </div>
 
+        <!-- Tabelle mit allen Produkten -->
+        <div class="card table-card" th:if="${!#lists.isEmpty(listProductsView)}">
+            <div class="table-scroll">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produkt-Id</th>
+                            <th>Name</th>
+                            <th>Marke</th>
+                            <th>Preis</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Für jedes Produkt in der Liste Product wird eine Zeile ausgegeben. -->
+                    <tbody>
+                        <tr th:each="product : ${listProductsView}">
+                            <td class="cell-id" th:text="${product.pid}"></td>
+                            <td class="cell-strong" th:text="${product.name}"></td>
+                            <td><span class="badge badge-neutral" th:text="${product.brand}"></span></td>
+                            <td class="cell-price" th:text="${product.price}"></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="btn btn-small btn-secondary"
+                                       th:href="@{'/admin/products/edit/' + ${product.pid}}">Bearbeiten</a>
+                                    <a class="btn btn-small btn-danger-ghost"
+                                       th:href="@{'/admin/products/delete/' + ${product.pid}}"
+                                       onclick="return confirm('Wollen Sie wirklich diese Produkt löschen?');">Löschen</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Leerer Zustand, wenn noch keine Produkte vorhanden sind -->
+        <div class="card empty-state" th:if="${#lists.isEmpty(listProductsView)}">
+            <h2>Noch keine Produkte vorhanden</h2>
+            <p>Legen Sie Ihr erstes Produkt an, um es hier in der Übersicht zu sehen.</p>
+            <a class="btn btn-primary" th:href="@{/admin/products/new}">Erstes Produkt anlegen</a>
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>MiniShop</span>
+            <span>Produktverwaltung</span>
+        </div>
+    </footer>
 
 </body>
 </html>
