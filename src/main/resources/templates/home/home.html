@@ -6,7 +6,7 @@
          static/css/style.css wird von Spring Boot unter /css/style.css ausgeliefert. -->
     <th:block th:replace="~{fragments/header :: headTags('MiniShop - Startseite')}"></th:block>
 </head>
-<body>
+<body class="page-home">
 
     <!-- Navigationsleiste oben. Vom Server wird der Inhalt durch das Fragment
          fragments/header.html ersetzt. Der Inhalt innerhalb dieses Elements ist
@@ -27,10 +27,9 @@
     </header>
 
     <main>
-        <!-- Begrüßung -->
+        <!-- Begrüßung: Hero über die gesamte Seite (volle Breite & Höhe) -->
         <section class="hero">
-            <div class="container hero-grid">
-
+            <div class="container">
                 <div class="hero-copy">
                     <p class="eyebrow rise">Willkommen</p>
                     <h1 class="rise rise-2">

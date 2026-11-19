@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniShop - Warenkorb</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+    <!-- Navigationsleiste aus dem Fragment (aktiver Punkt: Warenkorb) -->
+    <header class="site-header" th:replace="~{fragments/header :: header('cart')}"></header>
+
+    <main class="container page">
+
+        <!-- Seitenkopf -->
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Ihre Auswahl</p>
+                <h1>Warenkorb</h1>
+                <p class="page-subtitle"
+                   th:text="${cartCountView == 1 ? '1 Artikel im Warenkorb' : cartCountView + ' Artikel im Warenkorb'}">
+                    0 Artikel im Warenkorb
+                </p>
+            </div>
+            <a class="btn btn-secondary" th:href="@{/shop}">Weiter einkaufen</a>
+        </div>
+
+        <!-- Leerer Warenkorb -->
+        <div class="card empty-state" th:if="${#lists.isEmpty(cartItemsView)}">
+            <h2>Ihr Warenkorb ist noch leer</h2>
+            <p>Legen Sie Produkte aus dem Shop in den Warenkorb, um sie hier zu sehen.</p>
+            <a class="btn btn-primary" th:href="@{/shop}">Zum Shop</a>
+        </div>
+
+        <!-- Gefüllter Warenkorb -->
+        <div class="cart-layout" th:unless="${#lists.isEmpty(cartItemsView)}">
+
+            <!-- Positionen -->
+            <div class="card table-card">
+                <div class="table-scroll">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Einzelpreis</th>
+                                <th>Menge</th>
+                                <th>Summe</th>
+                                <th>Aktion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${cartItemsView}">
+                                <td>
+                                    <a class="cell-strong"
+                                       th:href="@{'/shop/' + ${item.product.pid}}"
+                                       th:text="${item.product.name}">Produktname</a>
+                                    <div class="product-brand" th:text="${item.product.brand}">Marke</div>
+                                </td>
+                                <td class="cell-price"
+                                    th:text="${#numbers.formatDecimal(item.product.price, 1, 2)} + ' €'">0,00 €</td>
+                                <td>
+                                    <!-- Menge ändern -->
+                                    <form class="quantity-form"
+                                          th:action="@{'/cart/update/' + ${item.product.pid}}" method="post">
+                                        <label class="sr-only"
+                                               th:for="'quantity-' + ${item.product.pid}">Menge</label>
+                                        <input class="form-control quantity-input" type="number"
+                                               th:id="'quantity-' + ${item.product.pid}"
+                                               name="quantity" min="1" max="99"
+                                               th:value="${item.quantity}">
+                                        <button class="btn btn-small btn-secondary" type="submit">OK</button>
+                                    </form>
+                                </td>
+                                <td class="cell-price"
+                                    th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' €'">0,00 €</td>
+                                <td>
+                                    <!-- Position entfernen -->
+                                    <form th:action="@{'/cart/remove/' + ${item.product.pid}}" method="post">
+                                        <button class="btn btn-small btn-danger-ghost" type="submit">Entfernen</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Zusammenfassung -->
+            <aside class="card cart-summary">
+                <h2>Zusammenfassung</h2>
+
+                <div class="summary-row">
+                    <span>Artikel</span>
+                    <span class="summary-value" th:text="${cartCountView}">0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Zwischensumme</span>
+                    <span class="summary-value"
+                          th:text="${#numbers.formatDecimal(cartTotalView, 1, 2)} + ' €'">0,00 €</span>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Gesamt</span>
+                    <span class="summary-value"
+                          th:text="${#numbers.formatDecimal(cartTotalView, 1, 2)} + ' €'">0,00 €</span>
+                </div>
+
+                <div class="cart-summary-actions">
+                    <a class="btn btn-primary btn-block" th:href="@{/shop}">Weiter einkaufen</a>
+                    <form th:action="@{/cart/clear}" method="post">
+                        <button class="btn btn-secondary btn-block" type="submit">Warenkorb leeren</button>
+                    </form>
+                </div>
+            </aside>
+
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; 2026 MiniShop</span>
+            <span>Team 1 &middot; Shop-Frontend f&uuml;r Kunden</span>
+        </div>
+    </footer>
+
+</body>
+</html>

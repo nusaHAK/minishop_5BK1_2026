@@ -9,6 +9,6 @@ public class HomeController {
     //Startseite des Kunden-Shops
     @GetMapping("/")
     public String viewHomePage() {
-        return "home/index";  //Template: templates/home/index.html
+        return "home/home";  //Template: templates/home/home.html
     }
 }

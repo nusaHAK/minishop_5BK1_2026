@@ -54,8 +54,14 @@
                 </dl>
  
                 <div class="product-detail-actions">
-                    <button class="btn btn-primary" type="button" disabled>In den Warenkorb</button>
-                    <a class="btn btn-secondary" th:href="@{/shop}">Weiter stöbern</a>
+                    <!-- Ware aus dem Warenkorb-Feature (CartController) -->
+                    <form class="quantity-form" th:action="@{'/cart/add/' + ${product.pid}}" method="post">
+                        <label class="sr-only" for="quantity">Menge</label>
+                        <input class="form-control quantity-input" type="number" id="quantity"
+                               name="quantity" min="1" max="99" value="1">
+                        <button class="btn btn-primary" type="submit">In den Warenkorb</button>
+                    </form>
+                    <a class="btn btn-secondary" th:href="@{/cart}">Zum Warenkorb</a>
                 </div>
             </div>
  
