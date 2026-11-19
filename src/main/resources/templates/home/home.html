@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniShop - Startseite</title>
-    <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../../static/style.css" th:href="@{/style.css}">
 </head>
-<body>
+<body class="page-home">
 
     <!-- Navigationsleiste oben. Vom Server wird der Inhalt durch das Fragment
          fragments/header.html ersetzt. Der Inhalt innerhalb dieses Elements ist
@@ -28,10 +28,9 @@
     </header>
 
     <main>
-        <!-- Begrüßung -->
+        <!-- Begrüßung: Hero über die gesamte Seite (volle Breite & Höhe) -->
         <section class="hero">
-            <div class="container hero-grid">
-
+            <div class="container">
                 <div class="hero-copy">
                     <p class="eyebrow rise">Willkommen</p>
                     <h1 class="rise rise-2">
@@ -48,24 +47,6 @@
                         <p class="cta-note">Alle Produkte auf einen Blick</p>
                     </div>
                 </div>
-
-                
-                        <div class="product-body">
-                            <p class="product-kicker">MiniShop</p>
-                            <h2 class="product-title">Ihr nächster Einkauf</h2>
-                            <p class="product-text">
-                                Marken, Preise und Produktdetails &ndash; alles übersichtlich
-                                an einem Ort.
-                            </p>
-                            <div class="product-foot">
-                                <span class="price-label">Bereit zum Stöbern?</span>
-                                <a class="mini-btn" href="/shop" th:href="@{/shop}">Shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="float-badge">Alle Preise transparent</span>
-                </div>
-
             </div>
         </section>
 

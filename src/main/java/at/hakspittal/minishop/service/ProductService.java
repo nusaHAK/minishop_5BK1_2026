@@ -38,6 +38,11 @@ public class ProductService {
         return product_repo.findById(pid).get();
     }
 
+    //ein Produkt aus der DB laden - liefert null, wenn es nicht existiert
+    public Product find(Long pid){
+        return product_repo.findById(pid).orElse(null);
+    }
+
     //löschen eines Produkts aus der DB
     public void delete(Long pid){
         product_repo.deleteById(pid);

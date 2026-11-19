@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniShop - Shop</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+    <!-- Navigationsleiste aus dem Fragment (aktiver Punkt: Shop) -->
+    <header class="site-header" th:replace="~{fragments/header :: header('shop')}"></header>
+
+    <main class="container page">
+
+        <!-- Seitenkopf -->
+        <div class="page-header">
+            <div>
+                <p class="eyebrow">Sortiment</p>
+                <h1>Shop</h1>
+                <p class="page-subtitle">Alle Produkte mit Name, Marke und Preis auf einen Blick.</p>
+            </div>
+            <a class="btn btn-secondary" th:href="@{/cart}">Zum Warenkorb</a>
+        </div>
+
+        <!-- Produktliste -->
+        <div class="product-grid" th:if="${!#lists.isEmpty(listProductsView)}">
+
+            <article class="product-card" th:each="product : ${listProductsView}">
+
+                <!-- Kein Bild in der DB vorhanden -> Anfangsbuchstabe als Platzhalter -->
+                <div class="product-media"
+                     th:text="${#strings.toUpperCase(#strings.substring(product.name, 0, 1))}">M</div>
+
+                <div class="product-body">
+                    <span class="product-brand" th:text="${product.brand}">Marke</span>
+                    <h3 class="product-title" th:text="${product.name}">Produktname</h3>
+                    <p class="product-price"
+                       th:text="${#numbers.formatDecimal(product.price, 1, 2)} + ' €'">0,00 €</p>
+                    <div class="product-footer">
+                        <a class="btn btn-small btn-primary"
+                           th:href="@{'/shop/' + ${product.pid}}">Details</a>
+                    </div>
+                </div>
+
+            </article>
+
+        </div>
+
+        <!-- Leerer Zustand -->
+        <div class="card empty-state" th:if="${#lists.isEmpty(listProductsView)}">
+            <h2>Noch keine Produkte vorhanden</h2>
+            <p>Sobald Produkte angelegt sind, erscheinen sie hier im Sortiment.</p>
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; 2026 MiniShop</span>
+            <span>Team 1 &middot; Shop-Frontend f&uuml;r Kunden</span>
+        </div>
+    </footer>
+
+</body>
+</html>

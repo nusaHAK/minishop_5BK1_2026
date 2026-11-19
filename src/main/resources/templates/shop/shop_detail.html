@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${productView.name + ' - MiniShop'}">Produkt - MiniShop</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+    <header class="site-header" th:replace="~{fragments/header :: header('shop')}"></header>
+
+    <main class="container page">
+
+        <p class="eyebrow">
+            <a th:href="@{/shop}">&larr; Zurück zum Shop</a>
+        </p>
+
+        <div class="detail-grid">
+
+            <!-- Kein Bild in der DB vorhanden -> Anfangsbuchstabe als Platzhalter -->
+            <div class="detail-media"
+                 th:text="${#strings.toUpperCase(#strings.substring(productView.name, 0, 1))}">M</div>
+
+            <div class="card card-padded">
+                <span class="product-brand" th:text="${productView.brand}">Marke</span>
+                <h1 th:text="${productView.name}">Produktname</h1>
+                <p class="detail-price"
+                   th:text="${#numbers.formatDecimal(productView.price, 1, 2)} + ' €'">0,00 €</p>
+                <p class="text-muted">
+                    Produkt-Id: <span th:text="${productView.pid}">1</span>
+                </p>
+
+                <!-- Produkt in den Warenkorb legen (Menge wählbar) -->
+                <form class="detail-form" th:action="@{'/cart/add/' + ${productView.pid}}" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="quantity">Menge</label>
+                        <input class="form-control quantity-input" type="number" id="quantity"
+                               name="quantity" min="1" max="99" value="1">
+                    </div>
+                    <button class="btn btn-primary" type="submit">In den Warenkorb</button>
+                    <a class="btn btn-secondary" th:href="@{/cart}">Zum Warenkorb</a>
+                </form>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; 2026 MiniShop</span>
+            <span>Team 1 &middot; Shop-Frontend f&uuml;r Kunden</span>
+        </div>
+    </footer>
+
+</body>
+</html>
