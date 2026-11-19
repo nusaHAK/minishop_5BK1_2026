@@ -30,14 +30,16 @@
     /* Farben – heller E-Commerce-Look */
     --color-bg: #ffffff;
     --color-surface: #ffffff;
-    --color-surface-muted: #f1f5f9;
-    /* Kartenflaeche: sehr helles Grau, damit sich Karten vom weissen Grund abheben */
-    --color-card: #f8fafc;
-    --color-card-border: #e2e8f0;
+    --color-surface-muted: #fbfaf8;
+    /* Kartenflaeche: reines Weiss wie der Seitenhintergrund – die Karten werden
+       nur noch durch Kontur und Schatten abgesetzt */
+    --color-card: #ffffff;
+    --color-card-border: #efeee8;
+    --color-card-border-strong: #d8d5cb;
     --color-text: #0f172a;
     --color-text-muted: #64748b;
-    --color-border: #e2e8f0;
-    --color-border-strong: #cbd5e1;
+    --color-border: #eceae3;
+    --color-border-strong: #d8d5cb;
 
     /* Markengrün aus dem Logo ("SUS Shopping") */
     --color-primary: #2c7f5b;
@@ -488,7 +490,7 @@ p:last-child {
 
 .card-hover:hover {
     transform: translateY(-4px);
-    border-color: var(--color-border-strong);
+    border-color: var(--color-card-border-strong);
     box-shadow: var(--shadow-md);
 }
 
@@ -515,7 +517,7 @@ p:last-child {
 
 .product-card:hover {
     transform: translateY(-4px);
-    border-color: var(--color-border-strong);
+    border-color: var(--color-card-border-strong);
     box-shadow: var(--shadow-md);
 }
 
@@ -761,22 +763,8 @@ textarea:focus {
     padding: var(--space-6) var(--space-8);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: linear-gradient(120deg, #ffffff 0%, #f6f9ff 52%, #eaf2ff 100%);
+    background-color: var(--color-card);
     box-shadow: var(--shadow-sm);
-}
-
-/* Dezenter blauer Lichtreflex rechts */
-.admin-hero::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: -13rem;
-    right: -6rem;
-    width: 28rem;
-    height: 28rem;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(44, 127, 91, 0.16), transparent 66%);
-    pointer-events: none;
 }
 
 /* Farbiger Akzentstreifen am oberen Rand */
@@ -785,7 +773,7 @@ textarea:focus {
     position: absolute;
     inset: 0 0 auto 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--color-primary), #7cc3a4 45%, transparent 88%);
+    background-color: var(--color-primary);
 }
 
 .admin-hero-copy {
@@ -838,7 +826,7 @@ textarea:focus {
     justify-content: space-between;
     gap: var(--space-3);
     padding: var(--space-4) var(--space-6);
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    background-color: var(--color-card);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -895,7 +883,7 @@ textarea:focus {
 
 .table thead th {
     padding: var(--space-3) var(--space-6);
-    background-color: var(--color-surface-muted);
+    background-color: var(--color-card);
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text-muted);
     font-size: 0.72rem;
@@ -1093,7 +1081,7 @@ textarea:focus {
     align-items: center;
     gap: var(--space-4);
     padding: var(--space-5) var(--space-6);
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    background: linear-gradient(180deg, var(--color-card) 0%, var(--color-surface) 100%);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -1201,9 +1189,15 @@ textarea:focus {
 .info-list li {
     position: relative;
     padding-left: var(--space-5);
-    color: var(--color-text-muted);
+    color: var(--color-text);
     font-size: 0.875rem;
     line-height: 1.5;
+}
+
+/* Hinweistext in den Karten rechts (Bearbeiten und Anlegen): schwarz statt grau */
+.admin-aside .form-hint,
+.admin-aside .detail-list dd {
+    color: var(--color-text);
 }
 
 .info-list li::before {
@@ -1539,7 +1533,7 @@ textarea:focus {
 
 /* Kein Anheben beim Ueberfahren – nur Rahmen und Schatten reagieren */
 .feature:hover {
-    border-color: var(--color-border-strong);
+    border-color: var(--color-card-border-strong);
     box-shadow: var(--shadow-md);
 }
 
@@ -2083,7 +2077,7 @@ textarea:focus {
 }
 
 .cart-item:hover {
-    border-color: var(--color-border-strong);
+    border-color: var(--color-card-border-strong);
     box-shadow: var(--shadow-sm);
 }
 
