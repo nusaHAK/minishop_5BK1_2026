@@ -537,6 +537,12 @@ p:last-child {
     object-fit: cover;
 }
 
+/* Buchstabe und Bild liegen uebereinander, damit der Buchstabe bei
+   fehlender Bilddatei sofort sichtbar ist */
+.product-media > * {
+    grid-area: 1 / 1;
+}
+
 .product-body {
     display: flex;
     flex-direction: column;
@@ -964,6 +970,11 @@ textarea:focus {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Buchstabe und Bild teilen sich dieselbe Zelle */
+.product-avatar > * {
+    grid-area: 1 / 1;
 }
 
 .cell-product-text {
@@ -1860,7 +1871,7 @@ textarea:focus {
     object-fit: cover;
 }
 
-/* Platzhalter ohne hinterlegtes Bild: Anfangsbuchstabe des Produkts */
+/* Vorschau mit Anfangsbuchstabe: das Bild liegt darueber und deckt ihn ab */
 .image-preview-letter {
     display: grid;
     place-items: center;
@@ -1869,6 +1880,10 @@ textarea:focus {
     color: var(--color-text-muted);
     font-size: 2rem;
     font-weight: 700;
+}
+
+.image-preview-letter > * {
+    grid-area: 1 / 1;
 }
 
 /* Dezentes Label auf der Vorschau */

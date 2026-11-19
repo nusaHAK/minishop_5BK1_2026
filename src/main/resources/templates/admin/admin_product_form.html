@@ -133,16 +133,15 @@
                         <div class="image-upload"
                             th:with="hasImage=${not #strings.isEmpty(productView.imageUrl)}">
 
-                            <!-- Vorschau des aktuell hinterlegten Bildes -->
-                            <figure class="image-preview" th:if="${hasImage}">
-                                <img th:src="${productView.imageUrl}" alt="Aktuelles Produktbild">
-                                <figcaption>Aktuell</figcaption>
-                            </figure>
-
-                            <!-- Ohne Bild: Anfangsbuchstabe des Produkts als Platzhalter -->
-                            <figure class="image-preview image-preview-letter" th:unless="${hasImage}">
-                                <span th:text="${#strings.isEmpty(productView.name) ? '?' : #strings.toUpperCase(#strings.substring(#strings.trim(productView.name), 0, 1))}">P</span>
-                                <figcaption>Kein Bild</figcaption>
+                            <!-- Vorschau: der Anfangsbuchstabe liegt hinter dem Bild und bleibt
+                                 sichtbar, wenn die Bilddatei fehlt -->
+                            <figure class="image-preview image-preview-letter"
+                                    th:with="initial=${#strings.isEmpty(#strings.trim(productView.name)) ? '?' : #strings.toUpperCase(#strings.substring(#strings.trim(productView.name), 0, 1))}">
+                                <span th:text="${initial}">P</span>
+                                <img th:if="${hasImage}" th:src="${productView.imageUrl}"
+                                     alt="Aktuelles Produktbild"
+                                     onerror="const fig = this.closest('figure'); this.remove(); fig.querySelector('figcaption').textContent = 'Kein Bild';">
+                                <figcaption th:text="${hasImage} ? 'Aktuell' : 'Kein Bild'">Kein Bild</figcaption>
                             </figure>
 
                             <div class="image-upload-body">

@@ -70,15 +70,16 @@
                     <tbody>
                         <tr th:each="product : ${listProductsView}">
 
-                            <!-- Eigene Bildspalte; ohne hinterlegtes Bild der Anfangsbuchstabe -->
+                            <!-- Eigene Bildspalte: der Anfangsbuchstabe liegt hinter dem Bild
+                                 und bleibt sichtbar, wenn die Bilddatei fehlt -->
                             <td class="cell-thumb">
                                 <span class="product-avatar">
+                                    <span aria-hidden="true"
+                                          th:text="${#strings.isEmpty(#strings.trim(product.name)) ? '?' : #strings.toUpperCase(#strings.substring(#strings.trim(product.name), 0, 1))}">P</span>
                                     <img th:if="${not #strings.isEmpty(product.imageUrl)}"
                                          th:src="${product.imageUrl}"
-                                         th:alt="${product.name}">
-                                    <span th:unless="${not #strings.isEmpty(product.imageUrl)}"
-                                          aria-hidden="true"
-                                          th:text="${#strings.toUpperCase(#strings.substring(product.name, 0, 1))}">P</span>
+                                         th:alt="${product.name}"
+                                         onerror="this.remove()">
                                 </span>
                             </td>
 

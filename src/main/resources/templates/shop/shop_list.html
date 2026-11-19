@@ -44,14 +44,15 @@
                     <!-- Schleife über alle Produkte aus dem Controller -->
                     <div class="product-card rise" th:each="p : ${products}">
 
-                        <!-- Vorschaubild; ohne hinterlegtes Bild der Anfangsbuchstabe -->
+                        <!-- Vorschaubild; der Anfangsbuchstabe liegt dahinter und bleibt
+                             sichtbar, wenn die Bilddatei fehlt -->
                         <div class="product-media">
+                            <span aria-hidden="true"
+                                  th:text="${#strings.isEmpty(#strings.trim(p.name)) ? '?' : #strings.toUpperCase(#strings.substring(#strings.trim(p.name), 0, 1))}">P</span>
                             <img th:if="${not #strings.isEmpty(p.imageUrl)}"
                                  th:src="${p.imageUrl}"
-                                 th:alt="${p.name}">
-                            <span th:unless="${not #strings.isEmpty(p.imageUrl)}"
-                                  aria-hidden="true"
-                                  th:text="${#strings.toUpperCase(#strings.substring(p.name, 0, 1))}">P</span>
+                                 th:alt="${p.name}"
+                                 onerror="this.remove()">
                         </div>
 
                         <div class="product-body" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
