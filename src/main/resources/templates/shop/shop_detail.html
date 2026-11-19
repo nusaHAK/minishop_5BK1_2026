@@ -9,18 +9,25 @@
     <!-- Gleiche Navigation wie in der Shop-Übersicht -->
     <header th:replace="~{fragments/header :: header('shop')}"></header>
  
-    <main class="container page">
- 
-        <!-- Rückweg zur Übersicht -->
-        <a class="btn btn-secondary" th:href="@{/shop}" style="margin-bottom: var(--space-6);">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-                 class="btn-icon-svg" aria-hidden="true">
-                <path d="M19 12H5"></path>
-                <path d="M11 6l-6 6 6 6"></path>
-            </svg>
-            Zurück zum Shop
-        </a>
+    <main>
+
+        <!-- Seitenkopf im selben Aufbau wie Shop und Warenkorb -->
+        <section class="hero hero-page hero-detail">
+            <div class="container">
+                <!-- Rückweg zur Übersicht oben im Seitenkopf -->
+                <a class="btn btn-secondary back-link" th:href="@{/shop}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                         class="btn-icon-svg" aria-hidden="true">
+                        <path d="M19 12H5"></path>
+                        <path d="M11 6l-6 6 6 6"></path>
+                    </svg>
+                    Zurück zum Shop
+                </a>
+            </div>
+        </section>
+
+        <div class="container page-body">
  
         <div class="product-detail">
              <div class="product-media product-detail-media">
@@ -33,23 +40,21 @@
  
             <!-- Produktinfos -->
             <div class="product-detail-info">
-                <p class="product-kicker" th:text="${product.brand}">Marke</p>
                 <h1 class="product-detail-title" th:text="${product.name}">Produktname</h1>
- 
+
+                <p class="product-kicker" th:text="${product.brand}">Marke</p>
+
                 <p class="product-detail-price"
                    th:text="${#numbers.formatDecimal(product.price, 1, 2) + ' €'}">0,00 €</p>
 
+                <!-- Beschreibung rechts neben dem Produktbild -->
                 <p class="product-detail-desc" th:if="${not #strings.isEmpty(product.description)}"
                    th:text="${product.description}">Kurzbeschreibung</p>
- 
+
                 <dl class="detail-list">
                     <div class="detail-row">
                         <dt>Marke</dt>
                         <dd th:text="${product.brand}">MiniShop</dd>
-                    </div>
-                    <div class="detail-row">
-                        <dt>Artikelnummer</dt>
-                        <dd th:text="${product.pid}">1</dd>
                     </div>
                 </dl>
  
@@ -61,10 +66,11 @@
                                name="quantity" min="1" max="99" value="1">
                         <button class="btn btn-primary" type="submit">In den Warenkorb</button>
                     </form>
-                    <a class="btn btn-secondary" th:href="@{/cart}">Zum Warenkorb</a>
                 </div>
             </div>
  
+        </div>
+
         </div>
     </main>
  

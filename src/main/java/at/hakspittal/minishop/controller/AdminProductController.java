@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 @Controller
 public class AdminProductController {
 
-    //Erlaubte Bildformate fuer den Upload
+    //Erlaubte Bildformate für den Upload
     private static final Set<String> ALLOWED_IMAGE_TYPES =
             Set.of("image/jpeg", "image/png", "image/webp", "image/gif");
 

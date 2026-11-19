@@ -1,6 +1,4 @@
-package at.hakspittal.minishop.model;
-
-import at.hakspittal.minishop.entity.Product;
+package at.hakspittal.minishop.entity;
 
 /**
  * Eine Position im Warenkorb: ein Produkt mit der gewählten Menge.

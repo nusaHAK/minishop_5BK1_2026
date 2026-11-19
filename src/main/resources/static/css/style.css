@@ -29,11 +29,13 @@
 :root {
     /* Farben – heller E-Commerce-Look */
     --color-bg: #ffffff;
-    --color-surface: #ffffff;
+    /* Flaechen- und Kartenfarbe zeigen auf denselben Wert; die beiden Namen
+       bleiben als sprechende Aliase erhalten. */
+    --color-surface: var(--color-bg);
     --color-surface-muted: #fbfaf8;
     /* Kartenflaeche: reines Weiss wie der Seitenhintergrund – die Karten werden
        nur noch durch Kontur und Schatten abgesetzt */
-    --color-card: #ffffff;
+    --color-card: var(--color-bg);
     --color-card-border: #efeee8;
     --color-card-border-strong: #d8d5cb;
     --color-text: #0f172a;
@@ -47,6 +49,8 @@
     --color-primary-soft: #eef7f2;
     --color-primary-border: #c3e2d1;
     --color-primary-soft-strong: #d9ece2;
+    /* Schrift und Symbole auf farbigen Flaechen (gruen, rot, dunkel) */
+    --color-on-accent: #ffffff;
 
     --color-danger: #dc2626;
     --color-danger-hover: #b91c1c;
@@ -238,12 +242,25 @@ p:last-child {
 /* --------------------------------------------------------------------------
    05 Navigation – sticky Top-Navbar
    -------------------------------------------------------------------------- */
+/* Kopfzeile: ganz oben transparent, damit der Seitenhintergrund durchscheint.
+   Sobald gescrollt wird, setzt main.js die Klasse .is-scrolled und die Leiste
+   wird weiß, damit die Links über dem Inhalt lesbar bleiben.
+   Der transparente Rahmen haelt die Hoehe stabil (kein 1px-Springen). */
 .navbar {
     position: sticky;
     top: 0;
     z-index: 100;
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
+    transition: background-color var(--transition), border-color var(--transition),
+                box-shadow var(--transition);
+}
+
+.navbar.is-scrolled {
     background-color: rgba(255, 255, 255, 0.92);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom-color: var(--color-border);
+    box-shadow: 0 10px 24px -22px rgba(15, 23, 42, 0.55);
     backdrop-filter: saturate(180%) blur(10px);
     -webkit-backdrop-filter: saturate(180%) blur(10px);
 }
@@ -274,7 +291,7 @@ p:last-child {
 .brand-logo {
     display: block;
     width: auto;
-    height: 56px;
+    height: 64px;
 }
 
 .nav-links {
@@ -340,13 +357,13 @@ p:last-child {
 
 .btn-primary {
     background-color: var(--color-primary);
-    color: #ffffff;
+    color: var(--color-on-accent);
     box-shadow: var(--shadow-xs);
 }
 
 .btn-primary:hover {
     background-color: var(--color-primary-hover);
-    color: #ffffff;
+    color: var(--color-on-accent);
     box-shadow: 0 6px 14px -6px rgba(44, 127, 91, 0.55);
 }
 
@@ -375,12 +392,12 @@ p:last-child {
 
 .btn-danger {
     background-color: var(--color-danger);
-    color: #ffffff;
+    color: var(--color-on-accent);
 }
 
 .btn-danger:hover {
     background-color: var(--color-danger-hover);
-    color: #ffffff;
+    color: var(--color-on-accent);
     box-shadow: 0 6px 14px -6px rgba(220, 38, 38, 0.6);
 }
 
@@ -400,7 +417,7 @@ p:last-child {
 .btn-danger-ghost:hover {
     background-color: var(--color-danger);
     border-color: var(--color-danger);
-    color: #ffffff;
+    color: var(--color-on-accent);
     box-shadow: 0 6px 14px -6px rgba(220, 38, 38, 0.45);
 }
 
@@ -419,7 +436,7 @@ p:last-child {
 
 /* Heller Button auf dunklem/ blauem Grund (CTA-Band) */
 .btn-light {
-    background-color: #ffffff;
+    background-color: var(--color-surface);
     color: var(--color-primary);
     box-shadow: var(--shadow-md);
 }
@@ -498,8 +515,8 @@ p:last-child {
 .grid,
 .product-grid {
     display: grid;
-    gap: var(--space-6);
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 /* Produktkarte */
@@ -525,18 +542,21 @@ p:last-child {
     display: grid;
     place-items: center;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
-    background: linear-gradient(135deg, var(--color-surface), var(--color-surface-muted));
+    aspect-ratio: 1 / 1;
+    background-color: var(--color-card);
     color: var(--color-primary);
     font-size: 1.75rem;
     font-weight: 700;
 }
 
-/* Vorschaubild fuellt die Bildflaeche, ohne sie zu verzerren */
+/* Das Bild fuellt die Bildflaeche voll aus (kein weisser Rand innerhalb der
+   Karte). Bei Querformatfotos wird nur seitlich beschnitten, das Motiv bleibt
+   in der Hoehe vollstaendig sichtbar. */
 .product-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
 }
 
 /* Buchstabe und Bild liegen uebereinander, damit der Buchstabe bei
@@ -545,30 +565,29 @@ p:last-child {
     grid-area: 1 / 1;
 }
 
+/* Der Textbereich fuellt die Karte, damit Preis und Button in allen Karten
+   einer Reihe auf derselben Linie sitzen (Karten sind gleich hoch). */
 .product-body {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-5);
+    gap: var(--space-1);
+    padding: var(--space-4);
 }
 
 .product-title {
-    margin: 0;
+    margin: var(--space-1) 0 0;
     font-size: 1.05rem;
     font-weight: 600;
 }
 
-/* Kurzbeschreibung auf der Produktkarte: zwei Zeilen, dann abgeschnitten */
+/* Kurzbeschreibung auf der Produktkarte: vollstaendig, ohne Abschneiden */
 .product-desc {
-    display: -webkit-box;
     margin: var(--space-1) 0 0;
-    overflow: hidden;
     color: var(--color-text-muted);
     font-size: 0.875rem;
     line-height: 1.5;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    line-clamp: 2;
+    overflow-wrap: anywhere;
 }
 
 /* --------------------------------------------------------------------------
@@ -950,7 +969,7 @@ textarea:focus {
     color: var(--color-text-muted);
     font-size: 0.82rem;
     font-weight: 700;
-    box-shadow: inset 0 1px 0 #ffffff;
+    box-shadow: inset 0 1px 0 var(--color-on-accent);
 }
 
 /* Hinterlegtes Produktbild fuellt das Kuerzel-Quadrat */
@@ -1029,7 +1048,7 @@ textarea:focus {
     margin-bottom: var(--space-1);
     border: 1px solid var(--color-primary-border);
     border-radius: var(--radius-full);
-    background: linear-gradient(140deg, var(--color-primary-soft), #e0e7ff);
+    background-color: var(--color-primary-soft);
     color: var(--color-primary);
 }
 
@@ -1139,10 +1158,11 @@ textarea:focus {
     border-radius: var(--radius-lg);
 }
 
-/* Die letzte Hinweis-Karte waechst mit, wenn das Formular hoeher ist, damit
-   beide Spalten exakt gleich hoch enden. */
-.admin-aside .info-card:last-child {
-    flex: 1 1 auto;
+/* Hinweis-Karten behalten ihre natuerliche Hoehe. Frueher wurde die letzte
+   Karte auf die Formularhoehe gestreckt, wodurch besonders der
+   „Bearbeitungsmodus“ unnoetig nach unten gezogen wurde. */
+.admin-aside .info-card {
+    flex: 0 0 auto;
 }
 
 .aside-card-head {
@@ -1208,8 +1228,9 @@ textarea:focus {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: var(--color-primary);
-    opacity: 0.55;
+    /* dunkleres Gruen und volle Deckkraft fuer besser sichtbare Punkte */
+    background-color: var(--color-primary-hover);
+    opacity: 1;
 }
 
 /* Steckbrief im Bearbeitungsmodus */
@@ -1237,6 +1258,15 @@ textarea:focus {
 .detail-row dt {
     color: var(--color-text-muted);
     font-size: 0.82rem;
+}
+
+/* Detailseite: Stichwort links und Wert rechts 1:1 gleich – gleiche Groesse,
+   beide fett und in derselben dunklen Farbe */
+.product-detail-info .detail-row dt,
+.product-detail-info .detail-row dd {
+    color: var(--color-text);
+    font-size: 0.82rem;
+    font-weight: 600;
 }
 
 .detail-row dd {
@@ -1342,6 +1372,25 @@ textarea:focus {
     background-color: var(--color-bg);
 }
 
+/* Kompakter Hero-Kopf der Unterseiten (Shop-Liste, Warenkorb, Detail) */
+.hero-page {
+    padding: 2.5rem 0 1.5rem 0;
+}
+
+.hero-page .lead {
+    max-width: 600px;
+}
+
+/* Inhalt unter dem kompakten Hero */
+.page-body {
+    padding: 2.5rem 0 4rem 0;
+}
+
+/* Zurueck-Link ueber der Detailansicht */
+.back-link {
+    margin-bottom: var(--space-6);
+}
+
 /* Startseite: der Hero fuellt den ersten Bildschirm – die Vorteile kommen erst
    beim Scrollen. svh sorgt fuer korrekte Hoehe, wenn mobile Browser ihre
    Adressleiste ein- und ausblenden. */
@@ -1363,6 +1412,21 @@ textarea:focus {
 
 .hero-copy {
     max-width: 52ch;
+}
+
+.page-home .hero-grid {
+    align-items: center;
+}
+
+/* Optischer Ausgleich: die Illustration hat transparente Raender, dadurch wirkt
+   die Textspalte etwas zu hoch – ein kleiner Versatz nach unten gleicht das aus. */
+.page-home .hero-copy {
+    padding-top: var(--space-2);
+}
+
+/* Kleine Zeile ueber der Begruessung: gruen, gesperrt, in Versalien */
+.hero-copy .eyebrow {
+    margin: 0 0 var(--space-3);
 }
 
 .hero h1 {
@@ -1401,10 +1465,39 @@ textarea:focus {
     gap: var(--space-4);
 }
 
+/* „Zum Shop“ im Hero: mehr Tiefe und spuerbare Klick-Rueckmeldung */
+.hero .btn-primary {
+    box-shadow: 0 10px 20px -12px rgba(44, 127, 91, 0.7), var(--shadow-xs);
+}
+
+.hero .btn-primary:hover {
+    box-shadow: 0 16px 26px -14px rgba(44, 127, 91, 0.75);
+}
+
+/* Kein Verschieben beim Klick – die Rueckmeldung kommt allein ueber den Schatten */
+.hero .btn-primary:active {
+    transform: none;
+}
+
 /* Bild rechts im Hero */
 .hero-visual {
     position: relative;
     width: 100%;
+}
+
+/* Weicher Salbeigruen-Blob hinter der Illustration, damit das freigestellte PNG
+   nicht hart auf dem weissen Hintergrund schwebt */
+.hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: 8% 2% 6% 6%;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%,
+            rgba(44, 127, 91, 0.16) 0%,
+            rgba(44, 127, 91, 0.07) 52%,
+            rgba(44, 127, 91, 0) 72%);
+    pointer-events: none;
 }
 
 /* Startseite: das Bild hochkant statt im 4:3-Format zeigen, damit rechts neben
@@ -1419,6 +1512,8 @@ textarea:focus {
 /* Freigestellte Illustration: kein Kartenrahmen, kein Schatten – das PNG ist
    transparent und steht direkt auf dem weissen Seitenhintergrund. */
 .hero-image {
+    position: relative;
+    z-index: 1;
     display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -1445,14 +1540,24 @@ textarea:focus {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
-    margin-top: var(--space-2);
-    padding-top: var(--space-3);
-    border-top: 1px solid var(--color-card-border);
+    /* Fusszeile der Karte nach unten druecken, damit Preise und Buttons in
+       allen Karten einer Reihe auf einer Linie sitzen */
+    margin-top: auto;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
 }
 
 .price-label {
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
+    /* Preis in der dunklen Textfarbe statt grau */
+    color: var(--color-text);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+/* Button in der Kartenfusszeile etwas kompakter als der Standard-Button */
+.product-foot .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
 }
 
 .mini-btn {
@@ -1470,7 +1575,7 @@ textarea:focus {
 
 .mini-btn:hover {
     background-color: var(--color-primary);
-    color: #ffffff;
+    color: var(--color-on-accent);
 }
 
 /* Sanfte Einblendung der Hero-Inhalte */
@@ -1496,6 +1601,8 @@ textarea:focus {
 /* 12.2 Vorteile ----------------------------------------------------------- */
 .features {
     padding-block: var(--space-16);
+    /* Sprungziel des Hero-Buttons: nicht unter der klebenden Navigation landen */
+    scroll-margin-top: calc(var(--navbar-height) + var(--space-4));
 }
 
 .section-head {
@@ -1573,7 +1680,7 @@ textarea:focus {
 .cta-band {
     padding-block: var(--space-12);
     background: linear-gradient(135deg, #1f5a41, var(--color-primary));
-    color: #ffffff;
+    color: var(--color-on-accent);
 }
 
 .cta-band-inner {
@@ -1586,7 +1693,7 @@ textarea:focus {
 
 .cta-band h2 {
     margin-bottom: var(--space-2);
-    color: #ffffff;
+    color: var(--color-on-accent);
 }
 
 .cta-band p {
@@ -1609,8 +1716,9 @@ textarea:focus {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-start;
-    text-align: left;
+    /* Copyright rechtsbuendig am rechten Rand des Inhaltsbereichs */
+    justify-content: flex-end;
+    text-align: right;
     gap: var(--space-2);
 }
 
@@ -1719,7 +1827,7 @@ textarea:focus {
     }
 
     .brand-logo {
-        height: 44px;
+        height: 48px;
     }
 
     .features-grid {
@@ -1777,6 +1885,15 @@ textarea:focus {
     align-items: start;
 }
 
+/* Detailseite: kein Trennstrich unter dem Seitenkopf, der Zurück-Link steht dort */
+.hero-page.hero-detail {
+    border-bottom: none;
+}
+
+.hero-detail .back-link {
+    margin-bottom: 0;
+}
+
 /* Bildfläche: Rahmen und Zuschnitt der Produktkarte, aber ohne Hover */
 .product-detail-media {
     overflow: hidden;
@@ -1797,10 +1914,13 @@ textarea:focus {
     gap: var(--space-3);
 }
 
+/* Produktname in der rechten Infospalte */
 .product-detail-title {
     margin: 0;
-    font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
-    letter-spacing: -0.02em;
+    color: var(--color-text);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
 }
 
 .product-detail-price {
@@ -1811,10 +1931,11 @@ textarea:focus {
     font-variant-numeric: tabular-nums;
 }
 
+/* Beschreibung in der rechten Infospalte */
 .product-detail-desc {
     margin: 0;
     color: var(--color-text-muted);
-    line-height: 1.65;
+    line-height: 1.7;
 }
 
 .product-detail-actions {
@@ -1888,7 +2009,7 @@ textarea:focus {
     padding: 0.15rem 0.45rem;
     border-radius: var(--radius-full);
     background-color: rgba(15, 23, 42, 0.72);
-    color: #ffffff;
+    color: var(--color-on-accent);
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.04em;

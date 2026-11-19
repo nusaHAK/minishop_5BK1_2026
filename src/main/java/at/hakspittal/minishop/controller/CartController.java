@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import at.hakspittal.minishop.entity.Product;
-import at.hakspittal.minishop.model.CartItem;
+import at.hakspittal.minishop.entity.CartItem;
 import at.hakspittal.minishop.service.CartService;
 import at.hakspittal.minishop.service.ProductService;
 import jakarta.servlet.http.HttpSession;

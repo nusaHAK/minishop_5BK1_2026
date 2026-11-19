@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 // Liefert hochgeladene Produktbilder aus dem Ordner "uploads" unter /uploads/... aus.
-// Bilder duerfen NICHT in src/main/resources/static liegen: dieser Ordner ist im
+// Bilder dürfen NICHT in src/main/resources/static liegen: dieser Ordner ist im
 // fertigen Jar schreibgeschuetzt, Uploads wuerden dort beim Deploy verloren gehen.
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

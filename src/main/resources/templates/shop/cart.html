@@ -9,26 +9,25 @@
     <!-- Navigationsleiste aus dem Fragment (aktiver Punkt: Warenkorb) -->
     <header th:replace="~{fragments/header :: header('cart')}"></header>
 
-    <main class="container page">
+    <main>
 
-        <!-- Seitenkopf -->
-        <div class="page-header">
-            <div>
-                <p class="eyebrow">Ihre Auswahl</p>
-                <h1>Warenkorb</h1>
-                <p class="page-subtitle"
-                   th:text="${cartCountView == 1 ? '1 Artikel im Warenkorb' : cartCountView + ' Artikel im Warenkorb'}">
-                    0 Artikel im Warenkorb
+        <!-- Seitenkopf im selben Aufbau wie die Shop-Seite: gleiche Hoehe,
+             gleiche Typografie und dieselbe Einblend-Animation -->
+        <section class="hero hero-page">
+            <div class="container">
+                <p class="eyebrow rise">Ihre Auswahl</p>
+                <h1 class="rise rise-2">
+                    Ihr <span class="accent-text">Warenkorb</span>
+                </h1>
+                <p class="lead rise rise-3"
+                   th:text="${cartCountView == 1 ? '1 Artikel liegt in Ihrem Warenkorb.' : cartCountView + ' Artikel liegen in Ihrem Warenkorb.'}">
+                    0 Artikel liegen in Ihrem Warenkorb.
                 </p>
             </div>
-            <a class="btn btn-secondary" th:href="@{/shop}">
-                <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19 12H5"></path>
-                    <path d="M11 6l-6 6 6 6"></path>
-                </svg>
-                Weiter einkaufen
-            </a>
-        </div>
+        </section>
+
+        <!-- Inhalt mit demselben Abstand wie die Produktliste im Shop -->
+        <div class="container page-body">
 
         <!-- Leerer Warenkorb -->
         <div class="card empty-state" th:if="${#lists.isEmpty(cartItemsView)}">
@@ -148,6 +147,8 @@
 
                 <p class="cart-note">Ihre Auswahl bleibt gespeichert, solange die Sitzung aktiv ist.</p>
             </aside>
+
+        </div>
 
         </div>
 

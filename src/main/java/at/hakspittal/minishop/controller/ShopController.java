@@ -11,7 +11,6 @@ import at.hakspittal.minishop.repository.ProductRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @Controller
 @RequestMapping("/shop")
 public class ShopController {
@@ -21,6 +20,7 @@ public class ShopController {
         this.productRepository = productRepository;
     }
 
+    // Lädt alle Produkte aus der Datenbank und übergibt sie ans Template
     @GetMapping
     public String showShopList(Model model) {
         // Ins Modell packen, damit thymeleaf darauf zugreifen kann
@@ -32,6 +32,7 @@ public class ShopController {
     // Route zur Detailseite eines Produktes über die ID
     @GetMapping("/{id}")
     public String showProductDetail(@PathVariable Long id, Model model) {
+        // Optional -> entweder Product oder leer, daher kein Absturz.
         Optional<Product> product = productRepository.findById(id);
 
         // Bei leerer ID zurück zur Shop-Seite, statt Fehlermeldung
@@ -43,6 +44,5 @@ public class ShopController {
 
         return "shop/shop_detail";
     }
-    
 
 }

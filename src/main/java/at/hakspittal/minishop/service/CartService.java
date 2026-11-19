@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import at.hakspittal.minishop.entity.Product;
-import at.hakspittal.minishop.model.CartItem;
+import at.hakspittal.minishop.entity.CartItem;
 import jakarta.servlet.http.HttpSession;
 
 /**
