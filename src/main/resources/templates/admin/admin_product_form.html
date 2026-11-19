@@ -2,102 +2,260 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${productView.pid} != null ? 'Produkt bearbeiten' : 'Produkt anlegen'">Produkt anlegen</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html -->
+    <th:block
+        th:replace="~{fragments/header :: headTags(${productView.pid} != null ? 'Produkt bearbeiten' : 'Produkt anlegen')}">
+    </th:block>
 </head>
 
 <body>
 
-    <!-- Navigation -->
-    <header class="navbar">
-        <div class="navbar-inner container">
-            <a class="brand" th:href="@{/admin/products}">
-                <span class="brand-mark">MS</span>
-                MiniShop
-            </a>
-            <nav class="nav-links" aria-label="Hauptnavigation">
-                <a class="nav-link is-active" th:href="@{/admin/products}">Produkte</a>
-                <a class="nav-link" th:href="@{/admin/products/new}">Produkt hinzufügen</a>
-            </nav>
-        </div>
-    </header>
+    <!-- Navigation: gleiches Fragment und gleiche Optik wie auf der Startseite -->
+    <header th:replace="~{fragments/header :: header('admin-new')}"></header>
 
-    <main class="container page">
+    <main class="container page admin-page">
 
-        <!-- Seitenkopf -->
-        <div class="page-header">
-            <div>
+        <!-- Kopfband: Titel, Modus und Rückweg -->
+        <section class="admin-hero">
+            <div class="admin-hero-copy">
                 <p class="eyebrow">Administration</p>
-                <h1 th:text="${productView.pid} != null ? 'Produkt bearbeiten' : 'Neues Produkt anlegen'">Produkt anlegen</h1>
+                <h1 th:text="${productView.pid} != null ? 'Produkt bearbeiten' : 'Neues Produkt anlegen'">Produkt
+                    anlegen</h1>
                 <p class="page-subtitle"
-                   th:text="${productView.pid} != null ? 'Ändern Sie die Daten des bestehenden Produkts.' : 'Füllen Sie die Felder aus, um ein neues Produkt anzulegen.'">
+                    th:text="${productView.pid} != null ? 'Ändern Sie die Daten des bestehenden Produkts.' : 'Füllen Sie die Felder aus, um ein neues Produkt anzulegen. Es erscheint nach dem Speichern sofort im Shop und in der Produktübersicht.'">
                     Füllen Sie die Felder aus, um ein Produkt anzulegen.
                 </p>
             </div>
-        </div>
 
-        <!-- Formular -->
-        <div class="card form-card">
-            <form class="form" th:action="@{/admin/products/save}" th:object="${productView}" method="post">
+            <div class="admin-hero-actions">
+                <a class="btn btn-secondary" th:href="@{/admin/products}">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg" viewBox="0 0 24 24"
+                        aria-hidden="true">
+                        <path d="M19 12H5"></path>
+                        <path d="M11 6l-6 6 6 6"></path>
+                    </svg>
+                    Zur Übersicht
+                </a>
+            </div>
+        </section>
 
-                <!-- ID-Feld nur anzeigen, wenn Produkt bereits existiert -->
-                <div class="form-group" th:if="${productView.pid} != null">
-                    <label class="form-label" for="pid">Produkt-ID</label>
-                    <input class="form-control" type="text" id="pid" th:field="*{pid}" readonly>
-                    <p class="form-hint">Wird automatisch vergeben.</p>
+        <!-- Zweispaltig: Formular links, Hinweise rechts -->
+        <div class="admin-layout">
+
+            <!-- Formular -->
+            <div class="card form-card">
+
+                <!-- Kopf der Maske: nennt den Zweck des Formulars -->
+                <div class="form-card-head">
+                    <span class="form-card-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path>
+                            <path d="M4 7.5l8 4.5 8-4.5"></path>
+                            <path d="M12 12v9"></path>
+                        </svg>
+                    </span>
+                    <div class="form-card-head-text">
+                        <h2>Produktdaten</h2>
+                        <p>Name, Marke und Preis bestimmen den Auftritt im Shop.</p>
+                    </div>
+                    <span class="badge badge-primary form-card-badge">Pflichtfelder sind mit * markiert</span>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="name">
-                        Produktname <span class="required">*</span>
-                    </label>
-                    <input class="form-control" type="text" id="name" th:field="*{name}"
-                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" required>
-                    <p class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-                </div>
+                <form class="form form-body" th:action="@{/admin/products/save}" th:object="${productView}"
+                    method="post" enctype="multipart/form-data">
 
-                <div class="form-grid">
+                    <!-- ID bleibt beim Speichern erhalten, ist aber nicht editierbar -->
+                    <input type="hidden" th:field="*{pid}">
+
                     <div class="form-group">
-                        <label class="form-label" for="brand">
-                            Marke <span class="required">*</span>
+                        <label class="form-label" for="name">
+                            Produktname <span class="required">*</span>
                         </label>
-                        <input class="form-control" type="text" id="brand" th:field="*{brand}"
-                               th:classappend="${#fields.hasErrors('brand')} ? 'is-invalid'" required>
-                        <p class="form-error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></p>
+                        <input class="form-control" type="text" id="name" th:field="*{name}"
+                            placeholder="z. B. Espressotasse 200 ml"
+                            th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" required>
+                        <p class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                        <p class="form-hint" th:unless="${#fields.hasErrors('name')}">Dieser Name erscheint in der
+                            Shop-Übersicht.</p>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="price">
-                            Preis <span class="required">*</span>
-                        </label>
-                        <input class="form-control" type="number" step="0.01" min="0" id="price" th:field="*{price}"
-                               th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'" required>
-                        <p class="form-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                        <label class="form-label" for="description">Kurzbeschreibung</label>
+                        <textarea class="form-control" id="description" rows="3" th:field="*{description}"
+                            placeholder="z. B. Handgefertigte Espressotasse aus Steinzeug, 200 ml"
+                            th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                        <p class="form-error" th:if="${#fields.hasErrors('description')}"
+                            th:errors="*{description}"></p>
+                        <p class="form-hint" th:unless="${#fields.hasErrors('description')}">
+                            Optional, maximal 500 Zeichen. Erscheint auf der Produktkarte und der Detailseite.
+                        </p>
                     </div>
-                </div>
 
-                <div class="form-actions">
-                    <!-- Button-Text dynamisch je nach Modus -->
-                    <button class="btn btn-primary" type="submit"
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label class="form-label" for="brand">
+                                Marke <span class="required">*</span>
+                            </label>
+                            <input class="form-control" type="text" id="brand" th:field="*{brand}"
+                                placeholder="z. B. MiniShop"
+                                th:classappend="${#fields.hasErrors('brand')} ? 'is-invalid'" required>
+                            <p class="form-error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></p>
+                            <p class="form-hint" th:unless="${#fields.hasErrors('brand')}">Erscheint als Marken-Label
+                                auf der Produktkarte.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="price">
+                                Preis <span class="required">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" type="number" step="0.01" min="0" id="price"
+                                    th:field="*{price}" placeholder="19,99"
+                                    th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'" required>
+                                <span class="input-suffix" aria-hidden="true">€</span>
+                            </div>
+                            <p class="form-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                            <p class="form-hint" th:unless="${#fields.hasErrors('price')}">Betrag in Euro, zum Beispiel
+                                19,99.</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Pfad bleibt beim Speichern erhalten, auch wenn keine neue Datei gewählt wird -->
+                    <input type="hidden" th:field="*{imageUrl}">
+
+                    <div class="form-group">
+                        <label class="form-label" for="imageFile">Produktbild</label>
+
+                        <div class="image-upload"
+                            th:with="hasImage=${not #strings.isEmpty(productView.imageUrl)}">
+
+                            <!-- Vorschau des aktuell hinterlegten Bildes -->
+                            <figure class="image-preview" th:if="${hasImage}">
+                                <img th:src="${productView.imageUrl}" alt="Aktuelles Produktbild">
+                                <figcaption>Aktuell</figcaption>
+                            </figure>
+
+                            <div class="image-upload-body">
+
+                                <!-- Datei-Feld: kein th:field, der Name muss zu @RequestParam passen -->
+                                <input class="file-input" type="file" id="imageFile" name="imageFile"
+                                    accept="image/jpeg,image/png,image/webp,image/gif">
+
+                                <!-- Das Label ist die sichtbare Auswahlflaeche und oeffnet den Dateidialog -->
+                                <label class="file-drop" for="imageFile">
+                                    <span class="file-drop-icon" aria-hidden="true">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+                                            <circle cx="9" cy="10" r="1.6"></circle>
+                                            <path d="M4 17l4.5-4.5a2 2 0 0 1 2.8 0L16 17"></path>
+                                            <path d="M14.5 14.5l1.7-1.7a2 2 0 0 1 2.8 0L21 15"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="file-drop-text">
+                                        <strong
+                                            th:text="${hasImage} ? 'Bild ersetzen' : 'Bild auswählen'">Bild auswählen</strong>
+                                        <span>JPG, PNG, WEBP oder GIF · maximal 5 MB</span>
+                                    </span>
+                                    <span class="btn btn-secondary btn-small file-drop-action">Datei wählen</span>
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <p class="form-error" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></p>
+                        <p class="form-hint" th:unless="${#fields.hasErrors('imageUrl')}">
+                            Ohne Auswahl bleibt das bisherige Bild erhalten.
+                        </p>
+                    </div>
+
+                    <div class="form-actions">
+                        <!-- Button-Text dynamisch je nach Modus -->
+                        <button class="btn btn-primary" type="submit"
                             th:text="${productView.pid} != null ? 'Änderungen speichern' : 'Neues Produkt speichern'">
-                        Speichern
-                    </button>
-                    <a class="btn btn-secondary" th:href="@{/admin/products}">Abbrechen</a>
+                            Speichern
+                        </button>
+                        <a class="btn btn-secondary" th:href="@{/admin/products}">Abbrechen</a>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Hinweise zur Pflege der Produktdaten -->
+            <aside class="admin-aside">
+
+                <div class="card card-padded info-card">
+                    <div class="aside-card-head">
+                        <span class="aside-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M12 11v5"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </span>
+                        <h2>Hinweise</h2>
+                    </div>
+                    <ul class="info-list">
+                        <li>Produktname und Marke sind Pflichtangaben und werden im Shop angezeigt.</li>
+                        <li>Der Preis wird in Euro angegeben, zum Beispiel 19,99.</li>
+                        <li>Änderungen sind nach dem Speichern sofort in der Produktübersicht sichtbar.</li>
+                    </ul>
                 </div>
 
-            </form>
+                <!-- Zusatzinfo im Bearbeitungsmodus -->
+                <div class="card card-padded info-card" th:if="${productView.pid} != null">
+                    <div class="aside-card-head">
+                        <span class="aside-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path>
+                                <path d="M9 12l2 2 4-4"></path>
+                            </svg>
+                        </span>
+                        <h2>Bearbeitungsmodus</h2>
+                    </div>
+                    <dl class="detail-list">
+                        <div class="detail-row">
+                            <dt>Sichtbarkeit</dt>
+                            <dd><span class="badge badge-success">Im Shop sichtbar</span></dd>
+                        </div>
+                    </dl>
+                    <p class="form-hint mt-4">Speichern aktualisiert den bestehenden Eintrag, statt ein neues Produkt
+                        anzulegen.</p>
+                </div>
+
+                <!-- Zusatzinfo beim Anlegen -->
+                <div class="card card-padded info-card" th:unless="${productView.pid} != null">
+                    <div class="aside-card-head">
+                        <span class="aside-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path>
+                                <path d="M18 16l.9 2.1L21 19l-2.1.9L18 22l-.9-2.1L15 19l2.1-.9z"></path>
+                            </svg>
+                        </span>
+                        <h2>Gut zu wissen</h2>
+                    </div>
+                    <ul class="info-list">
+                        <li>Ein eindeutiger Name hilft Kundinnen und Kunden bei der Orientierung.</li>
+                        <li>Die Marke erscheint als kleines Label auf der Produktkarte.</li>
+                        <li>Nach dem Speichern erscheint das Produkt sofort in Shop und Übersicht.</li>
+                    </ul>
+                </div>
+
+            </aside>
+
         </div>
 
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <span>MiniShop</span>
-            <span>Produktverwaltung</span>
-        </div>
-    </footer>
+    <footer th:replace="~{fragments/header :: footer('Produktverwaltung')}"></footer>
 
 </body>
 

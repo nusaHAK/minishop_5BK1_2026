@@ -1,34 +1,89 @@
 <!DOCTYPE html>
-<!-- Wiederverwendbare Navigationsleiste (Projektvereinbarung: fragments/header.html).
-     Einbinden in einer Seite:
+<!-- Wiederverwendbare Bausteine (Projektvereinbarung: fragments/header.html).
+
+     Stylesheet + Meta-Tags zentral einbinden (in jeder Seite im Kopfbereich):
+         <th:block th:replace="~{fragments/header :: headTags('MiniShop - Startseite')}"></th:block>
+
+     Navigationsleiste einbinden (gleiche Optik für Kunden- und Admin-Seiten):
          <header th:replace="~{fragments/header :: header('home')}"></header>
-     Der Parameter steuert den aktiven Menüpunkt: 'home' | 'shop' | 'cart'. -->
+     Erlaubte Werte für 'active':
+         'home' | 'shop' | 'cart'                 -> Kunden-Navigation
+         'admin-products' | 'admin-new'           -> Admin-Navigation
+
+     Footer einbinden:
+         <footer th:replace="~{fragments/header :: footer('Produktverwaltung')}"></footer> -->
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Navigation</title>
+    <title>Fragmente</title>
 </head>
 <body>
 
-    <header class="site-header" th:fragment="header(active)">
-        <div class="container header-inner">
+    <!-- ======================================================================
+         Fragment: headTags(title)
+         Einzige Stelle, an der das Stylesheet eingebunden wird.
+         Spring Boot liefert src/main/resources/static/css/style.css unter /css/style.css
+         aus - deshalb @{/css/style.css} und NICHT @{/style.css}.
+         ====================================================================== -->
+    <th:block th:fragment="headTags(title)">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title th:text="${title}">MiniShop</title>
+        <!-- href = Fallback fuer die Vorschau ohne Server, th:href = Pfad im Betrieb -->
+        <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css(v='2026-11-19-11')}">
+    </th:block>
 
-            <a class="brand" href="/" th:href="@{/}">
+    <!-- ======================================================================
+         Fragment: header(active)
+         Sticky Top-Navbar in einer einzigen Optik: Brand-Logo links, Links
+         rechts, dezenter Bottom-Border (Styles in style.css, Abschnitt 05).
+         isAdmin schaltet nur die Link-Ziele um, nicht das Aussehen.
+         ====================================================================== -->
+    <header class="navbar" th:fragment="header(active)"
+            th:with="isAdmin=${active == 'admin-products' or active == 'admin-new'}">
+        <div class="container navbar-inner">
+
+            <a class="brand" th:href="${isAdmin} ? @{/admin/products} : @{/}">
                 <span class="brand-mark">M</span>
                 MiniShop
             </a>
 
-            <nav class="site-nav" aria-label="Hauptnavigation">
-                <a href="/" th:href="@{/}"
-                   th:classappend="${active == 'home'} ? 'is-active'">Home</a>
-                <a href="/shop" th:href="@{/shop}"
-                   th:classappend="${active == 'shop'} ? 'is-active'">Shop</a>
-                <a href="/cart" th:href="@{/cart}"
-                   th:classappend="${active == 'cart'} ? 'is-active'">Warenkorb</a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+
+                <!-- Admin-Bereich -->
+                <th:block th:if="${isAdmin}">
+                    <a class="nav-link" th:href="@{/admin/products}"
+                       th:classappend="${active == 'admin-products'} ? 'is-active'">Produkte</a>
+                    <a class="nav-link" th:href="@{/admin/products/new}"
+                       th:classappend="${active == 'admin-new'} ? 'is-active'">Produkt hinzufügen</a>
+                </th:block>
+
+                <!-- Kunden-Shop -->
+                <th:block th:unless="${isAdmin}">
+                    <a class="nav-link" href="/" th:href="@{/}"
+                       th:classappend="${active == 'home'} ? 'is-active'">Home</a>
+                    <a class="nav-link" href="/shop" th:href="@{/shop}"
+                       th:classappend="${active == 'shop'} ? 'is-active'">Shop</a>
+                    <a class="nav-link" href="/cart" th:href="@{/cart}"
+                       th:classappend="${active == 'cart'} ? 'is-active'">Warenkorb</a>
+                </th:block>
+
             </nav>
 
         </div>
     </header>
+
+    <!-- ======================================================================
+         Fragment: footer(label)
+         Gleicher Footer auf allen Seiten; nur die rechte Beschriftung wird
+         pro Bereich übergeben.
+         ====================================================================== -->
+    <footer class="site-footer" th:fragment="footer(label)">
+        <div class="container">
+            <span>&copy; 2026 MiniShop</span>
+            <span th:text="${'Team 1 · ' + label}">Team 1 · Shop-Frontend für Kunden</span>
+        </div>
+    </footer>
 
 </body>
 </html>

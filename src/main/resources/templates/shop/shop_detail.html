@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html -->
+    <th:block th:replace="~{fragments/header :: headTags(${product.name} + ' – MiniShop')}"></th:block>
+</head>
+<body>
+ 
+    <!-- Gleiche Navigation wie in der Shop-Übersicht -->
+    <header th:replace="~{fragments/header :: header('shop')}"></header>
+ 
+    <main class="container page">
+ 
+        <!-- Rückweg zur Übersicht -->
+        <a class="btn btn-secondary" th:href="@{/shop}" style="margin-bottom: var(--space-6);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                 class="btn-icon-svg" aria-hidden="true">
+                <path d="M19 12H5"></path>
+                <path d="M11 6l-6 6 6 6"></path>
+            </svg>
+            Zurück zum Shop
+        </a>
+ 
+        <div class="product-detail">
+             <div class="product-media product-detail-media">
+                <img th:if="${not #strings.isEmpty(product.imageUrl)}"
+                     th:src="${product.imageUrl}"
+                     th:alt="${product.name}">
+                <span th:unless="${not #strings.isEmpty(product.imageUrl)}"
+                      th:text="${#strings.toUpperCase(#strings.substring(product.name, 0, 1))}">P</span>
+            </div>
+ 
+            <!-- Produktinfos -->
+            <div class="product-detail-info">
+                <p class="product-kicker" th:text="${product.brand}">Marke</p>
+                <h1 class="product-detail-title" th:text="${product.name}">Produktname</h1>
+ 
+                <p class="product-detail-price"
+                   th:text="${#numbers.formatDecimal(product.price, 1, 2) + ' €'}">0,00 €</p>
+
+                <p class="product-detail-desc" th:if="${not #strings.isEmpty(product.description)}"
+                   th:text="${product.description}">Kurzbeschreibung</p>
+ 
+                <dl class="detail-list">
+                    <div class="detail-row">
+                        <dt>Marke</dt>
+                        <dd th:text="${product.brand}">MiniShop</dd>
+                    </div>
+                    <div class="detail-row">
+                        <dt>Artikelnummer</dt>
+                        <dd th:text="${product.pid}">1</dd>
+                    </div>
+                </dl>
+ 
+                <div class="product-detail-actions">
+                    <button class="btn btn-primary" type="button" disabled>In den Warenkorb</button>
+                    <a class="btn btn-secondary" th:href="@{/shop}">Weiter stöbern</a>
+                </div>
+            </div>
+ 
+        </div>
+    </main>
+ 
+    <footer th:replace="~{fragments/header :: footer('Shop-Frontend für Kunden')}"></footer>
+ 
+</body>
+</html>

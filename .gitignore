@@ -1,5 +1,8 @@
 HELP.md
 target/
+
+### Hochgeladene Produktbilder (nur lokal) ###
+uploads/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

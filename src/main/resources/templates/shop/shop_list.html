@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!-- Thymeleaf-Namespace laden, damit th-Befehle verwendbar sind. -->
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html -->
+    <th:block th:replace="~{fragments/header :: headTags('MiniShop - Unsere Produkte')}"></th:block>
+</head>
+<body>
+
+    <!-- Navigationsleiste oben (Fragment-Einbindung analog zur Startseite) -->
+    <header class="navbar" th:replace="~{fragments/header :: header('shop')}">
+        <div class="container navbar-inner">
+            <a class="brand" href="/">
+                <span class="brand-mark">M</span>
+                MiniShop
+            </a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link is-active" href="/shop">Shop</a>
+                <a class="nav-link" href="/cart">Warenkorb</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Shop-Header / Intro -->
+        <section class="hero" style="padding: 2.5rem 0 1.5rem 0;">
+            <div class="container">
+                <p class="eyebrow rise">Sortiment</p>
+                <h1 class="rise rise-2">
+                    Unsere <span class="accent-text">Produkte</span>
+                </h1>
+                <p class="lead rise rise-3" style="max-width: 600px;">
+                    Entdecken Sie alle verfügbaren Artikel. Klicken Sie auf „Details“, um mehr zu erfahren.
+                </p>
+            </div>
+        </section>
+
+        <!-- Produkt-Raster (mit Abstand zum Intro) -->
+        <section style="padding: 2.5rem 0 4rem 0;">
+            <div class="container">
+                <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+                    
+                    <!-- Schleife über alle Produkte aus dem Controller -->
+                    <div class="product-card rise" th:each="p : ${products}">
+
+                        <!-- Vorschaubild; ohne hinterlegtes Bild der Anfangsbuchstabe -->
+                        <div class="product-media">
+                            <img th:if="${not #strings.isEmpty(p.imageUrl)}"
+                                 th:src="${p.imageUrl}"
+                                 th:alt="${p.name}">
+                            <span th:unless="${not #strings.isEmpty(p.imageUrl)}"
+                                  aria-hidden="true"
+                                  th:text="${#strings.toUpperCase(#strings.substring(p.name, 0, 1))}">P</span>
+                        </div>
+
+                        <div class="product-body" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
+                            <div>
+                                <p class="product-kicker" th:text="${p.brand}">Marke</p>
+                                <h3 class="product-title" th:text="${p.name}" style="margin-top: 0.25rem;">Produktname</h3>
+                                <p class="product-desc" th:if="${not #strings.isEmpty(p.description)}"
+                                   th:text="${p.description}">Kurzbeschreibung</p>
+                            </div>
+                            
+                            <div class="product-foot" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border, #e2e8f0); padding-top: 1rem; margin-top: auto;">
+                                <span class="price-label" style="font-weight: 700; font-size: 1.15rem;" th:text="${#numbers.formatDecimal(p.price, 1, 2) + ' €'}">0.00 €</span>
+                                <!-- Dynamischer Link zur Detailseite gemäß Projektvereinbarung /shop/{id} -->
+                                <a class="btn btn-primary" th:href="@{/shop/{id}(id=${p.pid})}" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                    Details <span aria-hidden="true">&rarr;</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer-Fragment -->
+    <footer th:replace="~{fragments/header :: footer('Shop-Frontend für Kunden')}"></footer>
+
+</body>
+</html>

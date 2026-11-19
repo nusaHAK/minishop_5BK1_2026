@@ -3,77 +3,143 @@
      Dann sind alle th-Befehle verwendbar.  -->
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produktübersicht</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html -->
+    <th:block th:replace="~{fragments/header :: headTags('Produktübersicht')}"></th:block>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <header class="navbar">
-        <div class="navbar-inner container">
-            <a class="brand" th:href="@{/admin/products}">
-                <span class="brand-mark">MS</span>
-                MiniShop
-            </a>
-            <nav class="nav-links" aria-label="Hauptnavigation">
-                <a class="nav-link is-active" th:href="@{/admin/products}">Produkte</a>
-                <a class="nav-link" th:href="@{/admin/products/new}">Produkt hinzufügen</a>
-            </nav>
-        </div>
-    </header>
+    <!-- Navigation: gleiches Fragment und gleiche Optik wie auf der Startseite -->
+    <header th:replace="~{fragments/header :: header('admin-products')}"></header>
 
-    <main class="container page">
+    <main class="container page admin-page">
 
-        <!-- Seitenkopf -->
-        <div class="page-header">
-            <div>
+        <!-- Kopfband: Titel, Kurzinfo und Hauptaktion auf einer Linie -->
+        <section class="admin-hero">
+            <div class="admin-hero-copy">
                 <p class="eyebrow">Administration</p>
                 <h1>Produktübersicht</h1>
-                <p class="page-subtitle">Alle Produkte des Shops auf einen Blick.</p>
+                <p class="page-subtitle">Alle Produkte des Shops auf einen Blick – anlegen, bearbeiten und aktuell halten.</p>
             </div>
-            <a class="btn btn-primary" th:href="@{/admin/products/new}">Produkt hinzufügen</a>
-        </div>
+
+            <div class="admin-hero-actions">
+                <a class="btn btn-primary" th:href="@{/admin/products/new}">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5v14"></path>
+                        <path d="M5 12h14"></path>
+                    </svg>
+                    Produkt hinzufügen
+                </a>
+            </div>
+        </section>
 
         <!-- Tabelle mit allen Produkten -->
         <div class="card table-card" th:if="${!#lists.isEmpty(listProductsView)}">
+
+            <!-- Werkzeugleiste: Überschrift + Anzahl der Einträge -->
+            <div class="table-toolbar">
+                <div class="table-toolbar-title">
+                    <span class="toolbar-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path>
+                            <path d="M4 7.5l8 4.5 8-4.5"></path>
+                            <path d="M12 12v9"></path>
+                        </svg>
+                    </span>
+                    <div>
+                        <h2>Alle Produkte</h2>
+                        <p class="table-toolbar-hint">Preise in Euro, Bearbeiten öffnet die Produktdaten.</p>
+                    </div>
+                </div>
+                <span class="badge badge-primary"
+                      th:text="${#lists.size(listProductsView) + (#lists.size(listProductsView) == 1 ? ' Eintrag' : ' Einträge')}">0 Einträge</span>
+            </div>
+
             <div class="table-scroll">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Produkt-Id</th>
-                            <th>Name</th>
+                            <th class="cell-thumb">Bild</th>
+                            <th>Produkt</th>
                             <th>Marke</th>
                             <th>Preis</th>
-                            <th>Aktionen</th>
+                            <th class="cell-actions">Aktionen</th>
                         </tr>
                     </thead>
 
                     <!-- Für jedes Produkt in der Liste Product wird eine Zeile ausgegeben. -->
                     <tbody>
                         <tr th:each="product : ${listProductsView}">
-                            <td class="cell-id" th:text="${product.pid}"></td>
-                            <td class="cell-strong" th:text="${product.name}"></td>
-                            <td><span class="badge badge-neutral" th:text="${product.brand}"></span></td>
-                            <td class="cell-price" th:text="${product.price}"></td>
+
+                            <!-- Eigene Bildspalte; ohne hinterlegtes Bild der Anfangsbuchstabe -->
+                            <td class="cell-thumb">
+                                <span class="product-avatar">
+                                    <img th:if="${not #strings.isEmpty(product.imageUrl)}"
+                                         th:src="${product.imageUrl}"
+                                         th:alt="${product.name}">
+                                    <span th:unless="${not #strings.isEmpty(product.imageUrl)}"
+                                          aria-hidden="true"
+                                          th:text="${#strings.toUpperCase(#strings.substring(product.name, 0, 1))}">P</span>
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="cell-product">
+                                    <span class="cell-product-text">
+                                        <span class="product-name" th:text="${product.name}">Produktname</span>
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-neutral" th:text="${product.brand}">Marke</span>
+                            </td>
+
+                            <td class="cell-price"
+                                th:text="${#numbers.formatDecimal(product.price, 1, 2)} + ' €'">0,00 €</td>
+
                             <td>
                                 <div class="table-actions">
                                     <a class="btn btn-small btn-secondary"
-                                       th:href="@{'/admin/products/edit/' + ${product.pid}}">Bearbeiten</a>
+                                       th:href="@{'/admin/products/edit/' + ${product.pid}}"
+                                       th:title="${'Produkt ' + product.name + ' bearbeiten'}">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z"></path>
+                                            <path d="M14.5 6.5l3 3"></path>
+                                        </svg>
+                                        Bearbeiten
+                                    </a>
                                     <a class="btn btn-small btn-danger-ghost"
                                        th:href="@{'/admin/products/delete/' + ${product.pid}}"
-                                       onclick="return confirm('Wollen Sie wirklich diese Produkt löschen?');">Löschen</a>
+                                       th:title="${'Produkt ' + product.name + ' löschen'}"
+                                       onclick="return confirm('Wollen Sie dieses Produkt wirklich löschen?');">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 7h16"></path>
+                                            <path d="M10 4h4"></path>
+                                            <path d="M6 7l1 12h10l1-12"></path>
+                                            <path d="M10 11v5"></path>
+                                            <path d="M14 11v5"></path>
+                                        </svg>
+                                        Löschen
+                                    </a>
                                 </div>
                             </td>
+
                         </tr>
                     </tbody>
                 </table>
             </div>
+
         </div>
 
         <!-- Leerer Zustand, wenn noch keine Produkte vorhanden sind -->
         <div class="card empty-state" th:if="${#lists.isEmpty(listProductsView)}">
+            <span class="empty-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path>
+                    <path d="M4 7.5l8 4.5 8-4.5"></path>
+                    <path d="M12 12v9"></path>
+                </svg>
+            </span>
             <h2>Noch keine Produkte vorhanden</h2>
             <p>Legen Sie Ihr erstes Produkt an, um es hier in der Übersicht zu sehen.</p>
             <a class="btn btn-primary" th:href="@{/admin/products/new}">Erstes Produkt anlegen</a>
@@ -81,12 +147,7 @@
 
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <span>MiniShop</span>
-            <span>Produktverwaltung</span>
-        </div>
-    </footer>
+    <footer th:replace="~{fragments/header :: footer('Produktverwaltung')}"></footer>
 
 </body>
 </html>

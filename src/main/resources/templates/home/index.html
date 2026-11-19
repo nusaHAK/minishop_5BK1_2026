@@ -2,10 +2,9 @@
 <!-- Thymeleaf-Namespace laden, damit th-Befehle verwendbar sind. -->
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniShop - Startseite</title>
-    <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+    <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html.
+         static/css/style.css wird von Spring Boot unter /css/style.css ausgeliefert. -->
+    <th:block th:replace="~{fragments/header :: headTags('MiniShop - Startseite')}"></th:block>
 </head>
 <body>
 
@@ -13,16 +12,16 @@
          fragments/header.html ersetzt. Der Inhalt innerhalb dieses Elements ist
          nur der Fallback für die Vorschau, wenn die Datei direkt im Browser
          geöffnet wird (ohne Server kein th:replace). -->
-    <header class="site-header" th:replace="~{fragments/header :: header('home')}">
-        <div class="container header-inner">
+    <header class="navbar" th:replace="~{fragments/header :: header('home')}">
+        <div class="container navbar-inner">
             <a class="brand" href="/">
                 <span class="brand-mark">M</span>
                 MiniShop
             </a>
-            <nav class="site-nav" aria-label="Hauptnavigation">
-                <a class="is-active" href="/">Home</a>
-                <a href="/shop">Shop</a>
-                <a href="/cart">Warenkorb</a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+                <a class="nav-link is-active" href="/">Home</a>
+                <a class="nav-link" href="/shop">Shop</a>
+                <a class="nav-link" href="/cart">Warenkorb</a>
             </nav>
         </div>
     </header>
@@ -42,14 +41,18 @@
                         Sortiment und entdecken Sie unsere Produkte.
                     </p>
                     <div class="cta-row rise rise-4">
-                        <a class="btn" href="/shop" th:href="@{/shop}">
+                        <a class="btn btn-primary" href="/shop" th:href="@{/shop}">
                             Zum Shop <span aria-hidden="true">&rarr;</span>
                         </a>
                         <p class="cta-note">Alle Produkte auf einen Blick</p>
                     </div>
                 </div>
 
-                
+                <div class="hero-visual rise rise-3">
+                    <div class="product-card hero-card">
+                        <div class="product-media">
+                            <span class="product-media-label">MiniShop</span>
+                        </div>
                         <div class="product-body">
                             <p class="product-kicker">MiniShop</p>
                             <h2 class="product-title">Ihr nächster Einkauf</h2>
@@ -143,12 +146,7 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <span>&copy; 2026 MiniShop</span>
-            <span>Team 1 &middot; Shop-Frontend f&uuml;r Kunden</span>
-        </div>
-    </footer>
+    <footer th:replace="~{fragments/header :: footer('Shop-Frontend für Kunden')}"></footer>
 
 </body>
 </html>
