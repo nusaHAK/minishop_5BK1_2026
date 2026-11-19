@@ -139,6 +139,12 @@
                                 <figcaption>Aktuell</figcaption>
                             </figure>
 
+                            <!-- Ohne Bild: Anfangsbuchstabe des Produkts als Platzhalter -->
+                            <figure class="image-preview image-preview-letter" th:unless="${hasImage}">
+                                <span th:text="${#strings.isEmpty(productView.name) ? '?' : #strings.toUpperCase(#strings.substring(#strings.trim(productView.name), 0, 1))}">P</span>
+                                <figcaption>Kein Bild</figcaption>
+                            </figure>
+
                             <div class="image-upload-body">
 
                                 <!-- Datei-Feld: kein th:field, der Name muss zu @RequestParam passen -->

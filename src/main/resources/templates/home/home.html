@@ -15,8 +15,8 @@
     <header class="navbar" th:replace="~{fragments/header :: header('home')}">
         <div class="container navbar-inner">
             <a class="brand" href="/">
-                <span class="brand-mark">M</span>
-                MiniShop
+                <img class="brand-logo" src="../../static/images/logo.png"
+                     alt="SUS Shopping – Sustainable Shopping">
             </a>
             <nav class="nav-links" aria-label="Hauptnavigation">
                 <a class="nav-link is-active" href="/">Home</a>
@@ -27,45 +27,30 @@
     </header>
 
     <main>
-        <!-- Begrüßung: Hero über die gesamte Seite (volle Breite & Höhe) -->
+        <!-- Hero: Text links, Hintergrundbild rechts -->
         <section class="hero">
-            <div class="container">
+            <div class="container hero-grid">
                 <div class="hero-copy">
-                    <p class="eyebrow rise">Willkommen</p>
                     <h1 class="rise rise-2">
-                        Willkommen im <span class="accent-text">MiniShop</span>!
+                        Willkommen bei <span class="accent-text">SUS Shopping</span>
                     </h1>
                     <p class="lead rise rise-3">
                         Schön, dass Sie bei uns vorbeischauen. Stöbern Sie in unserem
                         Sortiment und entdecken Sie unsere Produkte.
                     </p>
+                    <p class="hero-note rise rise-3">
+                        Nachhaltige Auswahl, faire Preise und alle Produktdetails offen
+                        einsehbar – damit Ihr Einkauf einfach und transparent bleibt.
+                    </p>
                     <div class="cta-row rise rise-4">
-                        <a class="btn btn-primary" href="/shop" th:href="@{/shop}">
-                            Zum Shop <span aria-hidden="true">&rarr;</span>
-                        </a>
-                        <p class="cta-note">Alle Produkte auf einen Blick</p>
+                        <a class="btn btn-primary" href="/shop" th:href="@{/shop}">Zum Shop</a>
                     </div>
                 </div>
 
                 <div class="hero-visual rise rise-3">
-                    <div class="product-card hero-card">
-                        <div class="product-media">
-                            <span class="product-media-label">MiniShop</span>
-                        </div>
-                        <div class="product-body">
-                            <p class="product-kicker">MiniShop</p>
-                            <h2 class="product-title">Ihr nächster Einkauf</h2>
-                            <p class="product-text">
-                                Marken, Preise und Produktdetails &ndash; alles übersichtlich
-                                an einem Ort.
-                            </p>
-                            <div class="product-foot">
-                                <span class="price-label">Bereit zum Stöbern?</span>
-                                <a class="mini-btn" href="/shop" th:href="@{/shop}">Shop</a>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="float-badge">Alle Preise transparent</span>
+                    <img class="hero-image" src="../../static/images/shop-background.png"
+                         th:src="@{/images/shop-background.png}"
+                         alt="Illustration: Einkaufen per Smartphone">
                 </div>
 
             </div>
@@ -79,7 +64,7 @@
                     <p class="eyebrow">Gut zu wissen</p>
                     <h2>Alles, was Sie brauchen</h2>
                     <p class="section-lead">
-                        Drei Dinge, die Ihren Besuch bei uns besonders einfach machen.
+                        Sechs Dinge, die Ihren Besuch bei uns besonders einfach machen.
                     </p>
                 </div>
 
@@ -96,7 +81,11 @@
                         </span>
                         <div>
                             <h3>Sortiment ansehen</h3>
-                            <p>Alle Produkte mit Name, Marke und Preis auf der Shop-Seite.</p>
+                            <p>
+                                Alle Produkte mit Name, Marke und Preis gesammelt auf einer Seite.
+                                Die Übersicht zeigt auf einen Blick, was verfügbar ist – ohne langes
+                                Suchen und ohne Umwege durch mehrere Menüs.
+                            </p>
                         </div>
                     </div>
 
@@ -109,7 +98,11 @@
                         </span>
                         <div>
                             <h3>Sicher stöbern</h3>
-                            <p>Produktdetails und Preise sind jederzeit transparent einsehbar.</p>
+                            <p>
+                                Produktdetails, Preise und Verfügbarkeit sind jederzeit offen
+                                einsehbar. Sie wissen vor dem Kauf genau, was Sie bekommen und was
+                                es kostet – ganz ohne Registrierung.
+                            </p>
                         </div>
                     </div>
 
@@ -123,7 +116,62 @@
                         </span>
                         <div>
                             <h3>Warenkorb</h3>
-                            <p>Ihre Auswahl bleibt während des Besuchs in der Session erhalten.</p>
+                            <p>
+                                Ihre Auswahl bleibt während des Besuchs in der Sitzung erhalten.
+                                Mengen lassen sich direkt anpassen und einzelne Positionen wieder
+                                entfernen – die Summe aktualisiert sich sofort.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20 4c-8 0-13 4.5-13 11a5 5 0 0 0 5 5c6.5 0 8-7 8-16z"></path>
+                                <path d="M4 20c3-6 7-9 12-11"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Nachhaltig ausgewählt</h3>
+                            <p>
+                                Wir setzen auf langlebige Produkte statt kurzlebiger Trends.
+                                Jede Kategorie bleibt bewusst überschaubar, damit Qualität vor
+                                Masse steht und Sie lange Freude an Ihrer Wahl haben.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20.5 13.3l-7.2 7.2a2 2 0 0 1-2.8 0l-6.2-6.2a2 2 0 0 1-.6-1.4V5a1 1 0 0 1 1-1h7.9c.5 0 1 .2 1.4.6l6.5 6.5a2 2 0 0 1 0 2.8z"></path>
+                                <circle cx="8.5" cy="8.5" r="1.3"></circle>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Faire Preise</h3>
+                            <p>
+                                Keine versteckten Kosten und keine Überraschungen im letzten
+                                Schritt: Der Preis, den Sie im Shop sehen, steht genauso im
+                                Warenkorb – inklusive aller Einzelpositionen.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="11" cy="11" r="6"></circle>
+                                <path d="M20 20l-4.2-4.2"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Schnell gefunden</h3>
+                            <p>
+                                Marke, Preis und Kurzbeschreibung stehen direkt auf der
+                                Produktkarte. Ein Klick führt zu allen Details – die Darstellung
+                                bleibt auch auf dem Smartphone gut lesbar.
+                            </p>
                         </div>
                     </div>
 
@@ -139,7 +187,7 @@
                     <p>Entdecken Sie das gesamte Sortiment von MiniShop.</p>
                 </div>
                 <a class="btn btn-light" href="/shop" th:href="@{/shop}">
-                    Zum Shop <span aria-hidden="true">&rarr;</span>
+                    Zum Shop
                 </a>
             </div>
         </section>

@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniShop - Warenkorb</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html -->
+    <th:block th:replace="~{fragments/header :: headTags('MiniShop - Warenkorb')}"></th:block>
 </head>
 <body>
 
     <!-- Navigationsleiste aus dem Fragment (aktiver Punkt: Warenkorb) -->
-    <header class="site-header" th:replace="~{fragments/header :: header('cart')}"></header>
+    <header th:replace="~{fragments/header :: header('cart')}"></header>
 
     <main class="container page">
 
@@ -23,107 +21,139 @@
                     0 Artikel im Warenkorb
                 </p>
             </div>
-            <a class="btn btn-secondary" th:href="@{/shop}">Weiter einkaufen</a>
+            <a class="btn btn-secondary" th:href="@{/shop}">
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 12H5"></path>
+                    <path d="M11 6l-6 6 6 6"></path>
+                </svg>
+                Weiter einkaufen
+            </a>
         </div>
 
         <!-- Leerer Warenkorb -->
         <div class="card empty-state" th:if="${#lists.isEmpty(cartItemsView)}">
+            <span class="empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"></path>
+                    <circle cx="9.5" cy="20" r="1.4"></circle>
+                    <circle cx="17.5" cy="20" r="1.4"></circle>
+                </svg>
+            </span>
             <h2>Ihr Warenkorb ist noch leer</h2>
             <p>Legen Sie Produkte aus dem Shop in den Warenkorb, um sie hier zu sehen.</p>
             <a class="btn btn-primary" th:href="@{/shop}">Zum Shop</a>
         </div>
 
-        <!-- Gefüllter Warenkorb -->
+        <!-- Gefüllter Warenkorb: Positionen links, Zusammenfassung rechts -->
         <div class="cart-layout" th:unless="${#lists.isEmpty(cartItemsView)}">
 
-            <!-- Positionen -->
-            <div class="card table-card">
-                <div class="table-scroll">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Produkt</th>
-                                <th>Einzelpreis</th>
-                                <th>Menge</th>
-                                <th>Summe</th>
-                                <th>Aktion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="item : ${cartItemsView}">
-                                <td>
-                                    <a class="cell-strong"
-                                       th:href="@{'/shop/' + ${item.product.pid}}"
-                                       th:text="${item.product.name}">Produktname</a>
-                                    <div class="product-brand" th:text="${item.product.brand}">Marke</div>
-                                </td>
-                                <td class="cell-price"
-                                    th:text="${#numbers.formatDecimal(item.product.price, 1, 2)} + ' €'">0,00 €</td>
-                                <td>
-                                    <!-- Menge ändern -->
-                                    <form class="quantity-form"
-                                          th:action="@{'/cart/update/' + ${item.product.pid}}" method="post">
-                                        <label class="sr-only"
-                                               th:for="'quantity-' + ${item.product.pid}">Menge</label>
-                                        <input class="form-control quantity-input" type="number"
-                                               th:id="'quantity-' + ${item.product.pid}"
-                                               name="quantity" min="1" max="99"
-                                               th:value="${item.quantity}">
-                                        <button class="btn btn-small btn-secondary" type="submit">OK</button>
-                                    </form>
-                                </td>
-                                <td class="cell-price"
-                                    th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' €'">0,00 €</td>
-                                <td>
-                                    <!-- Position entfernen -->
-                                    <form th:action="@{'/cart/remove/' + ${item.product.pid}}" method="post">
-                                        <button class="btn btn-small btn-danger-ghost" type="submit">Entfernen</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <section class="cart-items" aria-labelledby="cart-items-title">
+                <div class="cart-items-head">
+                    <h2 id="cart-items-title">Ihre Artikel</h2>
+                    <span class="badge badge-neutral"
+                          th:text="${cartCountView == 1 ? '1 Stück' : cartCountView + ' Stück'}">1 Stück</span>
                 </div>
-            </div>
+
+                <ul class="cart-list">
+                    <li class="cart-item" th:each="item : ${cartItemsView}">
+
+                        <!-- Vorschaubild; ohne hinterlegtes Bild der Anfangsbuchstabe -->
+                        <a class="cart-thumb" th:href="@{'/shop/' + ${item.product.pid}}"
+                           tabindex="-1" aria-hidden="true">
+                            <img th:if="${not #strings.isEmpty(item.product.imageUrl)}"
+                                 th:src="${item.product.imageUrl}" alt="">
+                            <span th:unless="${not #strings.isEmpty(item.product.imageUrl)}"
+                                  th:text="${#strings.toUpperCase(#strings.substring(item.product.name, 0, 1))}">P</span>
+                        </a>
+
+                        <div class="cart-item-body">
+                            <p class="product-brand" th:text="${item.product.brand}">Marke</p>
+                            <a class="cart-item-name" th:href="@{'/shop/' + ${item.product.pid}}"
+                               th:text="${item.product.name}">Produktname</a>
+                            <p class="cart-item-meta">
+                                <span>Einzelpreis</span>
+                                <span class="cart-item-price"
+                                      th:text="${#numbers.formatDecimal(item.product.price, 1, 2)} + ' €'">0,00 €</span>
+                            </p>
+
+                            <!-- Menge ändern -->
+                            <form class="quantity-form"
+                                  th:action="@{'/cart/update/' + ${item.product.pid}}" method="post">
+                                <label class="sr-only"
+                                       th:for="'quantity-' + ${item.product.pid}">Menge</label>
+                                <div class="quantity-stepper">
+                                    <input class="quantity-input" type="number"
+                                           th:id="'quantity-' + ${item.product.pid}"
+                                           name="quantity" min="1" max="99"
+                                           th:value="${item.quantity}">
+                                    <button class="quantity-submit" type="submit" title="Menge übernehmen">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M20 6L9 17l-5-5"></path>
+                                        </svg>
+                                        <span>Aktualisieren</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="cart-item-side">
+                            <span class="cart-item-total"
+                                  th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' €'">0,00 €</span>
+
+                            <!-- Position entfernen -->
+                            <form th:action="@{'/cart/remove/' + ${item.product.pid}}" method="post">
+                                <button class="cart-remove" type="submit">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M4 7h16"></path>
+                                        <path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"></path>
+                                        <path d="M6 7l1 12a2 2 0 0 0 2 1.9h6a2 2 0 0 0 2-1.9L18 7"></path>
+                                        <path d="M10 11v6M14 11v6"></path>
+                                    </svg>
+                                    <span>Entfernen</span>
+                                </button>
+                            </form>
+                        </div>
+
+                    </li>
+                </ul>
+            </section>
 
             <!-- Zusammenfassung -->
-            <aside class="card cart-summary">
-                <h2>Zusammenfassung</h2>
+            <aside class="card cart-summary" aria-labelledby="cart-summary-title">
+                <h2 id="cart-summary-title">Zusammenfassung</h2>
 
-                <div class="summary-row">
-                    <span>Artikel</span>
-                    <span class="summary-value" th:text="${cartCountView}">0</span>
-                </div>
-                <div class="summary-row">
-                    <span>Zwischensumme</span>
-                    <span class="summary-value"
-                          th:text="${#numbers.formatDecimal(cartTotalView, 1, 2)} + ' €'">0,00 €</span>
-                </div>
+                <dl class="summary-list">
+                    <div class="summary-row">
+                        <dt>Artikel</dt>
+                        <dd class="summary-value" th:text="${cartCountView}">0</dd>
+                    </div>
+                    <div class="summary-row">
+                        <dt>Zwischensumme</dt>
+                        <dd class="summary-value"
+                            th:text="${#numbers.formatDecimal(cartTotalView, 1, 2)} + ' €'">0,00 €</dd>
+                    </div>
+                </dl>
 
-                <div class="summary-row summary-total">
+                <div class="summary-total">
                     <span>Gesamt</span>
-                    <span class="summary-value"
-                          th:text="${#numbers.formatDecimal(cartTotalView, 1, 2)} + ' €'">0,00 €</span>
+                    <strong th:text="${#numbers.formatDecimal(cartTotalView, 1, 2)} + ' €'">0,00 €</strong>
                 </div>
 
                 <div class="cart-summary-actions">
                     <a class="btn btn-primary btn-block" th:href="@{/shop}">Weiter einkaufen</a>
                     <form th:action="@{/cart/clear}" method="post">
-                        <button class="btn btn-secondary btn-block" type="submit">Warenkorb leeren</button>
+                        <button class="btn btn-quiet btn-block" type="submit">Warenkorb leeren</button>
                     </form>
                 </div>
+
+                <p class="cart-note">Ihre Auswahl bleibt gespeichert, solange die Sitzung aktiv ist.</p>
             </aside>
 
         </div>
 
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <span>&copy; 2026 MiniShop</span>
-            <span>Team 1 &middot; Shop-Frontend f&uuml;r Kunden</span>
-        </div>
-    </footer>
+    <footer th:replace="~{fragments/header :: footer('Shop-Frontend für Kunden')}"></footer>
 
 </body>
 </html>

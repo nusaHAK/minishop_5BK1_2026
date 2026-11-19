@@ -16,6 +16,9 @@
    12 Startseite (Hero, Vorteile, CTA-Band)
    13 Footer & Utilities
    14 Responsive
+   15 Produkt-Detailseite (/shop/{id})
+   16 Bild-Upload im Produktformular
+   17 Warenkorb
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -25,17 +28,23 @@
    -------------------------------------------------------------------------- */
 :root {
     /* Farben – heller E-Commerce-Look */
-    --color-bg: #f8fafc;
+    --color-bg: #ffffff;
     --color-surface: #ffffff;
     --color-surface-muted: #f1f5f9;
+    /* Kartenflaeche: sehr helles Grau, damit sich Karten vom weissen Grund abheben */
+    --color-card: #f8fafc;
+    --color-card-border: #e2e8f0;
     --color-text: #0f172a;
     --color-text-muted: #64748b;
     --color-border: #e2e8f0;
     --color-border-strong: #cbd5e1;
 
-    --color-primary: #2563eb;
-    --color-primary-hover: #1d4ed8;
-    --color-primary-soft: #eff6ff;
+    /* Markengrün aus dem Logo ("SUS Shopping") */
+    --color-primary: #2c7f5b;
+    --color-primary-hover: #226447;
+    --color-primary-soft: #eef7f2;
+    --color-primary-border: #c3e2d1;
+    --color-primary-soft-strong: #d9ece2;
 
     --color-danger: #dc2626;
     --color-danger-hover: #b91c1c;
@@ -70,7 +79,7 @@
     --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
     --shadow-md: 0 10px 20px -8px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
     --shadow-lg: 0 20px 35px -12px rgba(15, 23, 42, 0.18);
-    --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    --shadow-focus: 0 0 0 3px rgba(44, 127, 91, 0.28);
 
     /* Typografie */
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -78,7 +87,7 @@
 
     /* Layout & Bewegung */
     --container: 1200px;
-    --navbar-height: 68px;
+    --navbar-height: 80px;
     --transition: 180ms ease;
 }
 
@@ -248,7 +257,7 @@ p:last-child {
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-4);
     color: var(--color-text);
     font-size: 1.1rem;
     font-weight: 700;
@@ -259,17 +268,11 @@ p:last-child {
     color: var(--color-primary);
 }
 
-.brand-mark {
-    display: inline-grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: var(--radius-sm);
-    background-color: var(--color-primary);
-    color: #ffffff;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+/* Logo links in der Navigation */
+.brand-logo {
+    display: block;
+    width: auto;
+    height: 56px;
 }
 
 .nav-links {
@@ -342,7 +345,7 @@ p:last-child {
 .btn-primary:hover {
     background-color: var(--color-primary-hover);
     color: #ffffff;
-    box-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.6);
+    box-shadow: 0 6px 14px -6px rgba(44, 127, 91, 0.55);
 }
 
 .btn-primary:focus-visible {
@@ -468,8 +471,8 @@ p:last-child {
    08 Cards & Raster
    -------------------------------------------------------------------------- */
 .card {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-card-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
 }
@@ -502,8 +505,8 @@ p:last-child {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-card-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     transition: transform var(--transition), box-shadow var(--transition),
@@ -521,7 +524,7 @@ p:last-child {
     place-items: center;
     overflow: hidden;
     aspect-ratio: 4 / 3;
-    background: linear-gradient(135deg, var(--color-primary-soft), var(--color-surface-muted));
+    background: linear-gradient(135deg, var(--color-surface), var(--color-surface-muted));
     color: var(--color-primary);
     font-size: 1.75rem;
     font-weight: 700;
@@ -766,7 +769,7 @@ textarea:focus {
     width: 28rem;
     height: 28rem;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.16), transparent 66%);
+    background: radial-gradient(circle, rgba(44, 127, 91, 0.16), transparent 66%);
     pointer-events: none;
 }
 
@@ -776,7 +779,7 @@ textarea:focus {
     position: absolute;
     inset: 0 0 auto 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--color-primary), #60a5fa 45%, transparent 88%);
+    background: linear-gradient(90deg, var(--color-primary), #7cc3a4 45%, transparent 88%);
 }
 
 .admin-hero-copy {
@@ -846,7 +849,7 @@ textarea:focus {
     place-items: center;
     width: 38px;
     height: 38px;
-    border: 1px solid #dbeafe;
+    border: 1px solid var(--color-primary-border);
     border-radius: var(--radius-sm);
     background-color: var(--color-primary-soft);
     color: var(--color-primary);
@@ -923,9 +926,9 @@ textarea:focus {
 }
 
 .table tbody tr:hover .product-avatar {
-    border-color: #bfdbfe;
-    background: linear-gradient(140deg, #eaf2ff, #dbeafe);
-    color: var(--color-primary-hover);
+    border-color: var(--color-border-strong);
+    background-color: var(--color-surface-muted);
+    color: var(--color-text);
 }
 
 .table tbody tr:last-child td {
@@ -947,10 +950,10 @@ textarea:focus {
     overflow: hidden;
     width: 44px;
     height: 44px;
-    border: 1px solid #dbeafe;
+    border: 1px solid var(--color-border);
     border-radius: 12px;
-    background: linear-gradient(140deg, #eff6ff, #dbeafe);
-    color: var(--color-primary);
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
     font-size: 0.82rem;
     font-weight: 700;
     box-shadow: inset 0 1px 0 #ffffff;
@@ -1013,9 +1016,9 @@ textarea:focus {
 /* Bearbeiten: beim Überfahren blau einfärben statt nur grau */
 .table-actions .btn-secondary:hover {
     background-color: var(--color-primary-soft);
-    border-color: #bfdbfe;
+    border-color: var(--color-primary-border);
     color: var(--color-primary);
-    box-shadow: 0 6px 14px -8px rgba(37, 99, 235, 0.55);
+    box-shadow: 0 6px 14px -8px rgba(44, 127, 91, 0.5);
 }
 
 /* Leerer Zustand mit Icon */
@@ -1025,7 +1028,7 @@ textarea:focus {
     width: 64px;
     height: 64px;
     margin-bottom: var(--space-1);
-    border: 1px solid #dbeafe;
+    border: 1px solid var(--color-primary-border);
     border-radius: var(--radius-full);
     background: linear-gradient(140deg, var(--color-primary-soft), #e0e7ff);
     color: var(--color-primary);
@@ -1089,7 +1092,7 @@ textarea:focus {
     place-items: center;
     width: 44px;
     height: 44px;
-    border: 1px solid #dbeafe;
+    border: 1px solid var(--color-primary-border);
     border-radius: var(--radius);
     background-color: var(--color-primary-soft);
     color: var(--color-primary);
@@ -1292,8 +1295,8 @@ textarea:focus {
 
 .alert-info {
     background-color: var(--color-primary-soft);
-    border-color: #bfdbfe;
-    color: #1e40af;
+    border-color: var(--color-primary-border);
+    color: #1c6b4b;
 }
 
 .empty-state {
@@ -1331,15 +1334,25 @@ textarea:focus {
     overflow: hidden;
     padding-block: var(--space-12) var(--space-16);
     border-bottom: 1px solid var(--color-border);
-    background:
-        radial-gradient(52rem 24rem at 88% -12%, rgba(37, 99, 235, 0.14), transparent 72%),
-        linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
+    background-color: var(--color-bg);
 }
 
+/* Startseite: der Hero fuellt den ersten Bildschirm – die Vorteile kommen erst
+   beim Scrollen. svh sorgt fuer korrekte Hoehe, wenn mobile Browser ihre
+   Adressleiste ein- und ausblenden. */
+.page-home .hero {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - var(--navbar-height));
+    min-height: calc(100svh - var(--navbar-height));
+    padding-block: var(--space-10);
+}
+
+/* Zweispaltig: Text links, Bild rechts */
 .hero-grid {
     display: grid;
-    gap: var(--space-10);
-    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: var(--space-12);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     align-items: center;
 }
 
@@ -1363,6 +1376,19 @@ textarea:focus {
     font-size: 1.075rem;
 }
 
+/* Ergaenzender Absatz im Hero – gleiche Groesse und Farbe wie der Lead-Absatz,
+   ohne Abstand dazwischen (liest sich als ein Textblock) */
+.hero-copy .lead {
+    margin-bottom: 0;
+}
+
+.hero-note {
+    max-width: 46ch;
+    margin: 0 0 var(--space-6);
+    color: var(--color-text-muted);
+    font-size: 1.075rem;
+}
+
 .cta-row {
     display: flex;
     flex-wrap: wrap;
@@ -1370,37 +1396,28 @@ textarea:focus {
     gap: var(--space-4);
 }
 
-.cta-note {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
-}
-
-/* Hero-Karte – nutzt die Optik der Produktkarte */
+/* Bild rechts im Hero */
 .hero-visual {
     position: relative;
     width: 100%;
-    max-width: 420px;
-    margin-inline: auto;
 }
 
-.hero-card {
-    max-width: 100%;
+/* Startseite: das Bild hochkant statt im 4:3-Format zeigen, damit rechts neben
+   dem Text keine leeren Flaechen bleiben. Die Breite bestimmt die Hoehe,
+   max-height deckelt sie auf grossen Bildschirmen. */
+.page-home .hero-image {
+    aspect-ratio: 1 / 1;
+    max-height: 34rem;
+    object-position: center;
 }
 
-.hero-card .product-media {
-    background-image:
-        linear-gradient(140deg, rgba(37, 99, 235, 0.82), rgba(15, 23, 42, 0.72)),
-        url("images/shop-background.jpg");
-    background-size: cover;
-    background-position: center;
-    color: #ffffff;
-}
-
-.product-media-label {
-    font-size: 1.35rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+/* Freigestellte Illustration: kein Kartenrahmen, kein Schatten – das PNG ist
+   transparent und steht direkt auf dem weissen Seitenhintergrund. */
+.hero-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
 }
 
 .product-kicker {
@@ -1425,7 +1442,7 @@ textarea:focus {
     gap: var(--space-3);
     margin-top: var(--space-2);
     padding-top: var(--space-3);
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-card-border);
 }
 
 .price-label {
@@ -1449,21 +1466,6 @@ textarea:focus {
 .mini-btn:hover {
     background-color: var(--color-primary);
     color: #ffffff;
-}
-
-.float-badge {
-    position: absolute;
-    right: calc(-1 * var(--space-3));
-    bottom: var(--space-6);
-    padding: 0.45rem var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-full);
-    background-color: var(--color-surface);
-    box-shadow: var(--shadow-md);
-    color: var(--color-text);
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
 }
 
 /* Sanfte Einblendung der Hero-Inhalte */
@@ -1506,26 +1508,26 @@ textarea:focus {
     color: var(--color-text-muted);
 }
 
+/* Drei Karten pro Reihe: sechs Karten ergeben zwei Reihen */
 .features-grid {
     display: grid;
     gap: var(--space-6);
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .feature {
     display: flex;
     gap: var(--space-4);
     padding: var(--space-6);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-card-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
-    transition: transform var(--transition), box-shadow var(--transition),
-        border-color var(--transition);
+    transition: box-shadow var(--transition), border-color var(--transition);
 }
 
+/* Kein Anheben beim Ueberfahren – nur Rahmen und Schatten reagieren */
 .feature:hover {
-    transform: translateY(-4px);
     border-color: var(--color-border-strong);
     box-shadow: var(--shadow-md);
 }
@@ -1565,7 +1567,7 @@ textarea:focus {
 /* 12.3 Abschluss-Band ----------------------------------------------------- */
 .cta-band {
     padding-block: var(--space-12);
-    background: linear-gradient(135deg, #1e40af, var(--color-primary));
+    background: linear-gradient(135deg, #1f5a41, var(--color-primary));
     color: #ffffff;
 }
 
@@ -1602,7 +1604,8 @@ textarea:focus {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    text-align: left;
     gap: var(--space-2);
 }
 
@@ -1660,6 +1663,21 @@ textarea:focus {
 
 /* Admin: Formular und Hinweise untereinander, sobald der Platz knapp wird */
 @media (max-width: 900px) {
+    /* Hero untereinander: Text zuerst, Bild darunter */
+    .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-8);
+    }
+
+    .hero-visual {
+        max-width: 520px;
+        margin-inline: auto;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .admin-layout {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -1692,7 +1710,15 @@ textarea:focus {
     .navbar-inner {
         flex-wrap: wrap;
         gap: var(--space-3);
-        padding-block: var(--space-3);
+        padding-block: var(--space-2);
+    }
+
+    .brand-logo {
+        height: 44px;
+    }
+
+    .features-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .nav-links {
@@ -1724,12 +1750,6 @@ textarea:focus {
 
     .hero {
         padding-block: var(--space-10) var(--space-12);
-    }
-
-    .float-badge {
-        position: static;
-        display: inline-block;
-        margin-top: var(--space-4);
     }
 
     .feature {
@@ -1840,6 +1860,17 @@ textarea:focus {
     object-fit: cover;
 }
 
+/* Platzhalter ohne hinterlegtes Bild: Anfangsbuchstabe des Produkts */
+.image-preview-letter {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(140deg, var(--color-surface), var(--color-surface-muted));
+    color: var(--color-text-muted);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
 /* Dezentes Label auf der Vorschau */
 .image-preview figcaption {
     position: absolute;
@@ -1890,7 +1921,7 @@ textarea:focus {
 
 .file-drop:hover {
     border-color: var(--color-primary);
-    background-color: var(--color-primary-soft);
+    background-color: var(--color-surface-muted);
 }
 
 .file-input:focus-visible + .file-drop {
@@ -1949,12 +1980,24 @@ textarea:focus {
 }
 
 /* --------------------------------------------------------------------------
-   15 Warenkorb
-   Styles fuer die Warenkorb-Seite: Positionstabelle mit Zusammenfassung,
-   Mengen-Eingabe und Warenkorb-Buttons.
+   17 Warenkorb
+   Positionen als eigenstaendige Zeilen-Karten (Bild | Infos + Menge |
+   Summe + Entfernen) und eine Zusammenfassung, die beim Scrollen mitlaeuft.
    -------------------------------------------------------------------------- */
 .btn-block {
     width: 100%;
+}
+
+/* Unauffaellige Nebenaktion (z. B. "Warenkorb leeren") */
+.btn-quiet {
+    background-color: transparent;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+}
+
+.btn-quiet:hover {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
 }
 
 .table .cell-strong {
@@ -1973,20 +2016,261 @@ textarea:focus {
 
 .cart-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-columns: minmax(0, 1fr) 340px;
     align-items: start;
     gap: var(--space-6);
 }
 
+/* Linke Spalte: Kopfzeile + Liste der Positionen */
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+}
+
+.cart-items-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cart-items-head h2 {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+}
+
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Eine Position: Bild | Infos + Menge | Summe + Entfernen */
+.cart-item {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.cart-item:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Vorschaubild bzw. Anfangsbuchstabe */
+.cart-thumb {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    width: 92px;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: linear-gradient(140deg, var(--color-surface), var(--color-surface-muted));
+    color: var(--color-primary);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.cart-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cart-item-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cart-item-name {
+    margin-top: 0.15rem;
+    color: var(--color-text);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.cart-item-name:hover {
+    color: var(--color-primary);
+}
+
+.cart-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    margin: var(--space-2) 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+}
+
+.cart-item-price {
+    color: var(--color-text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Mengen-Eingabe mit angeschlossenem Bestaetigen-Button */
+.quantity-form {
+    margin-top: var(--space-3);
+}
+
+.quantity-stepper {
+    display: inline-flex;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.quantity-stepper:hover {
+    border-color: var(--color-text-muted);
+}
+
+.quantity-stepper:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-focus);
+}
+
+/* Mengenfeld (Detailseite und Warenkorb) */
+.quantity-input {
+    width: 74px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.quantity-stepper .quantity-input {
+    width: 3.25rem;
+    padding: 0.4rem var(--space-2);
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    font-size: 0.925rem;
+    font-weight: 600;
+}
+
+.quantity-stepper .quantity-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.quantity-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0 var(--space-3);
+    border: 0;
+    border-left: 1px solid var(--color-border);
+    background-color: var(--color-surface-muted);
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.quantity-submit:hover {
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+
+.quantity-submit svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Rechte Spalte einer Position: Zeilensumme und Entfernen */
+.cart-item-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2);
+    text-align: right;
+}
+
+.cart-item-total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+.cart-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem var(--space-2);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.cart-remove:hover {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+.cart-remove svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Zusammenfassung */
 .cart-summary {
     position: sticky;
-    top: var(--space-4);
+    top: calc(var(--navbar-height) + var(--space-4));
     padding: var(--space-6);
+    border-radius: var(--radius-lg);
 }
 
 .cart-summary h2 {
     margin-bottom: var(--space-4);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+}
+
+.summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
 }
 
 .summary-row {
@@ -1994,9 +2278,13 @@ textarea:focus {
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-4);
-    padding-block: var(--space-2);
     color: var(--color-text-muted);
-    font-size: 0.925rem;
+    font-size: 0.9rem;
+}
+
+.summary-row dt,
+.summary-row dd {
+    margin: 0;
 }
 
 .summary-value {
@@ -2007,16 +2295,21 @@ textarea:focus {
 }
 
 .summary-total {
-    margin-top: var(--space-3);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
     padding-top: var(--space-4);
     border-top: 1px solid var(--color-border);
-    color: var(--color-text);
-    font-size: 1rem;
+    font-size: 0.975rem;
     font-weight: 700;
 }
 
-.summary-total .summary-value {
-    font-size: 1.2rem;
+.summary-total strong {
+    font-size: 1.35rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
 }
 
 .cart-summary-actions {
@@ -2028,25 +2321,44 @@ textarea:focus {
     border-top: 1px solid var(--color-border);
 }
 
-.quantity-form {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.quantity-input {
-    width: 74px;
-    padding: 0.4rem var(--space-2);
+.cart-note {
+    margin: var(--space-4) 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
     text-align: center;
-    font-variant-numeric: tabular-nums;
 }
 
-@media (max-width: 900px) {
+/* Zusammenfassung rutscht unter die Positionen, sobald der Platz knapp wird */
+@media (max-width: 1024px) {
     .cart-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .cart-summary {
         position: static;
+    }
+}
+
+@media (max-width: 640px) {
+    .cart-item {
+        grid-template-columns: 72px minmax(0, 1fr);
+        align-items: start;
+        gap: var(--space-3) var(--space-4);
+        padding: var(--space-4);
+    }
+
+    .cart-thumb {
+        width: 72px;
+    }
+
+    .cart-item-side {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: var(--space-3);
+        border-top: 1px dashed var(--color-border);
+        text-align: left;
     }
 }

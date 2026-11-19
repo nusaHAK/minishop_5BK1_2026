@@ -30,7 +30,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title th:text="${title}">MiniShop</title>
         <!-- href = Fallback fuer die Vorschau ohne Server, th:href = Pfad im Betrieb -->
-        <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css(v='2026-11-19-11')}">
+        <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css(v='2026-11-19-32')}">
     </th:block>
 
     <!-- ======================================================================
@@ -44,8 +44,9 @@
         <div class="container navbar-inner">
 
             <a class="brand" th:href="${isAdmin} ? @{/admin/products} : @{/}">
-                <span class="brand-mark">M</span>
-                MiniShop
+                <img class="brand-logo" src="../../static/images/logo.png"
+                     th:src="@{/images/logo.png}"
+                     alt="SUS Shopping – Sustainable Shopping">
             </a>
 
             <nav class="nav-links" aria-label="Hauptnavigation">
@@ -81,7 +82,6 @@
     <footer class="site-footer" th:fragment="footer(label)">
         <div class="container">
             <span>&copy; 2026 MiniShop</span>
-            <span th:text="${'Team 1 · ' + label}">Team 1 · Shop-Frontend für Kunden</span>
         </div>
     </footer>
 
