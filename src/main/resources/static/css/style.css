@@ -19,6 +19,7 @@
    15 Produkt-Detailseite (/shop/{id})
    16 Bild-Upload im Produktformular
    17 Warenkorb
+   18 Login & Registrieren
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -2491,4 +2492,32 @@ textarea:focus {
         border-top: 1px dashed var(--color-border);
         text-align: left;
     }
+}
+
+/* --------------------------------------------------------------------------
+   18 Auth (Login & Registrierung)
+   Isolierte Layout-Klassen ausschliesslich fuer auth/login.html und
+   auth/register.html – beeinflusst keine anderen Seiten.
+   -------------------------------------------------------------------------- */
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--space-6) var(--space-4);
+    background-color: var(--color-surface-muted);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+}
+
+.auth-footer {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    text-align: center;
 }

@@ -3,39 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - MiniShop</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+    <main class="auth-page">
+        <div class="card form-card auth-card">
+            <div class="form-card-head">
+                <div class="form-card-head-text">
+                    <p class="eyebrow">MiniShop</p>
+                    <h1>Login</h1>
+                    <p>Melde dich mit deinem Benutzerkonto an.</p>
+                </div>
+            </div>
 
-    <h1>Login</h1>
+            <div class="form-body">
+                <!-- Erfolgsmeldung nach erfolgreicher Registrierung -->
+                <div th:if="${param.registered}" class="alert alert-success mb-4">
+                    <span>Registrierung abgeschlossen. Bitte logge dich jetzt ein.</span>
+                </div>
 
-    <p th:if="${param.error}">
-        Benutzername oder Passwort ist falsch.
-    </p>
-    <p th:if="${param.logout}">
-        Du wurdest erfolgreich ausgeloggt.
-    </p>
-    <p th:if="${param.registered}">
-        Registrierung abgeschlossen. Bitte logge dich jetzt ein.
-    </p>
+                <!-- Meldung nach erfolgreichem Logout -->
+                <div th:if="${param.logout}" class="alert alert-info mb-4">
+                    <span>Du wurdest erfolgreich ausgeloggt.</span>
+                </div>
 
-    <form th:action="@{/login}" method="post">
-        <div>
-            <label for="username">Benutzername</label>
-            <input type="text" id="username" name="username" required autofocus>
-        </div> 
+                <!-- Fehlermeldung bei falschem Benutzernamen oder Passwort -->
+                <div th:if="${param.error}" class="alert alert-danger mb-4">
+                    <span>Ungültiger Benutzername oder falsches Passwort.</span>
+                </div>
 
-        <div>
-            <label for="password">Passwort</label>
-            <input type="text" id="password" name="password" required>
+                <form th:action="@{/login}" method="post" class="form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Benutzername</label>
+                        <input type="text" id="username" name="username" class="form-control" required autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Passwort</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Einloggen</button>
+                </form>
+
+                <div class="auth-footer">
+                    Noch kein Konto? <a th:href="@{/register}">Registrieren</a>
+                </div>
+            </div>
         </div>
-
-        <button type="submit">Einloggen</button>
-    </form>
-
-    <p>
-        Noch kein Konto? <a th:href="@{/register}">Registrieren</a>
-    </p>
-    
+    </main>
 </body>
 </html>
