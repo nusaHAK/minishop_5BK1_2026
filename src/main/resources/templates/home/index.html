@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- Thymeleaf-Namespace laden, damit th-Befehle verwendbar sind. -->
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <!-- Meta-Tags und Stylesheet kommen zentral aus fragments/header.html.
          static/css/style.css wird von Spring Boot unter /css/style.css ausgeliefert. -->
@@ -9,9 +10,7 @@
 <body class="page-home">
 
     <!-- Navigationsleiste oben. Vom Server wird der Inhalt durch das Fragment
-         fragments/header.html ersetzt. Der Inhalt innerhalb dieses Elements ist
-         nur der Fallback für die Vorschau, wenn die Datei direkt im Browser
-         geöffnet wird (ohne Server kein th:replace). -->
+         fragments/header.html ersetzt. -->
     <header class="navbar" th:replace="~{fragments/header :: header('home')}">
         <div class="container navbar-inner">
             <a class="brand" href="/">
@@ -36,18 +35,39 @@
                         Willkommen bei<br>
                         <span class="accent-text">SUS Shopping</span>
                     </h1>
-                    <p class="lead rise rise-3">
+
+                    <!-- Persönliche Begrüßung nur für eingeloggte Nutzer -->
+                    <p class="lead rise rise-3" sec:authorize="isAuthenticated()">
+                        Schön, dass Sie wieder da sind, <strong sec:authentication="name">Benutzer</strong>!
+                    </p>
+
+                    <!-- Standardtext nur für nicht eingeloggte Besucher -->
+                    <p class="lead rise rise-3" sec:authorize="!isAuthenticated()">
                         Schön, dass Sie bei uns vorbeischauen. Stöbern Sie in unserem
                         Sortiment und entdecken Sie unsere Produkte.
                     </p>
+
                     <p class="hero-note rise rise-3">
                         Nachhaltige Auswahl, faire Preise und alle Produktdetails offen
                         einsehbar – damit Ihr Einkauf einfach und transparent bleibt.
                     </p>
+
                     <div class="cta-row rise rise-4">
-                        <a class="btn btn-primary" href="/shop" th:href="@{/shop}">Zum Shop</a>
-                        <a class="btn btn-secondary" href="/login" th:href="@{/login}">Login</a>
-                        <a class="btn btn-secondary" href="/register" th:href="@{/register}">Registrieren</a>
+                        <!-- 1. Wenn NICHT eingeloggt: Login & Registrieren anzeigen -->
+                        <th:block sec:authorize="!isAuthenticated()">
+                            <a class="btn btn-primary" href="/login" th:href="@{/login}">Login</a>
+                            <a class="btn btn-secondary" href="/register" th:href="@{/register}">Registrieren</a>
+                        </th:block>
+
+                        <!-- 2. Wenn EINGELOGGT: Je nach Rolle passenden Bereich + Logout anzeigen -->
+                        <th:block sec:authorize="isAuthenticated()">
+                            <a class="btn btn-primary" sec:authorize="hasRole('CUSTOMER')" href="/shop" th:href="@{/shop}">Zum Shop</a>
+                            <a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" href="/admin" th:href="@{/admin}">Zum Admin-Bereich</a>
+
+                            <form th:action="@{/logout}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-secondary">Logout</button>
+                            </form>
+                        </th:block>
                     </div>
                 </div>
 
